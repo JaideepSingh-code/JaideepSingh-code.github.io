@@ -140,12 +140,17 @@
     tiltCards.forEach(function (card) {
       card.addEventListener('mousemove', function (e) {
         var r = card.getBoundingClientRect();
-        var px = (e.clientX - r.left) / r.width - 0.5;
-        var py = (e.clientY - r.top) / r.height - 0.5;
+        var nx = (e.clientX - r.left) / r.width;
+        var ny = (e.clientY - r.top) / r.height;
+        var px = nx - 0.5;
+        var py = ny - 0.5;
         card.classList.add('tilting');
         card.style.transform =
-          'perspective(820px) rotateX(' + (-py * 7).toFixed(2) + 'deg) rotateY(' +
-          (px * 9).toFixed(2) + 'deg) translateY(-6px)';
+          'perspective(820px) rotateX(' + (-py * 8).toFixed(2) + 'deg) rotateY(' +
+          (px * 11).toFixed(2) + 'deg) translateY(-7px)';
+        // cursor-tracking glare (project cards use these vars)
+        card.style.setProperty('--mx', (nx * 100).toFixed(1) + '%');
+        card.style.setProperty('--my', (ny * 100).toFixed(1) + '%');
       });
       card.addEventListener('mouseleave', function () {
         card.classList.remove('tilting');
