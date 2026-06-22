@@ -478,12 +478,21 @@
           <span class="section-num">07</span>
           <h2 class="contact-title">Let's build something <span class="accent-text">great</span>.</h2>
           <p class="contact-sub">
-            I'm actively looking for software engineering roles and I'm always happy to talk shop —
-            testing, AI, systems, or security. The fastest way to learn about me? Ask my AI, or just email me.
+            I'm actively looking for software engineering roles and I'm always happy to talk shop.
+            Send a message below — or ask my AI anything.
           </p>
+          <form class="contact-form" id="contactForm" novalidate>
+            <div class="cf-row">
+              <input id="cfName" type="text" placeholder="Your name" autocomplete="name" aria-label="Your name" required />
+              <input id="cfEmail" type="email" placeholder="Your email" autocomplete="email" aria-label="Your email" required />
+            </div>
+            <textarea id="cfMsg" rows="4" placeholder="What would you like to talk about?" aria-label="Your message" required></textarea>
+            <button type="submit" class="btn btn-primary btn-lg" id="cfSubmit">Send message</button>
+            <p class="cf-status" id="cfStatus" role="status" aria-live="polite"></p>
+          </form>
           <div class="contact-cta">
-            <a href="mailto:jaideep.engineer@gmail.com" class="btn btn-primary btn-lg">jaideep.engineer@gmail.com</a>
-            <button class="btn btn-outline btn-lg" id="contactAsk">✦ Ask my AI assistant</button>
+            <a href="mailto:jaideep.engineer@gmail.com" class="btn btn-outline">✉ Email directly</a>
+            <button class="btn btn-outline" id="contactAsk">✦ Ask my AI</button>
           </div>
           <div class="contact-links">
             <a href="https://github.com/JaideepSingh-code" target="_blank" rel="noopener">GitHub ↗</a>
@@ -529,7 +538,7 @@
     </form>
   </div>
 
-  <script>window.JAIDEEP_BOT_ENDPOINT = 'https://bot.jaideepsingh.dev';</script>
+  <script>window.JAIDEEP_BOT_ENDPOINT = 'https://bot.jaideepsingh.dev'; window.FORMSPREE_ENDPOINT = '';</script>
   <script src="projects-data.js"></script>
   <script src="script.js"></script>
   <script type="module" src="hero3d.js"></script>

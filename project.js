@@ -14,6 +14,27 @@
   var $ = function (id) { return document.getElementById(id); };
   var esc = function (s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); };
 
+  // A simple themed flow/architecture diagram chosen by project type.
+  function diagramSlide(proj) {
+    var c = proj.category.toLowerCase();
+    var type = c.indexOf('hardware') !== -1 ? 'hardware'
+      : c.indexOf('security') !== -1 ? 'security'
+      : c.indexOf('testing') !== -1 ? 'testing'
+      : c.indexOf('research') !== -1 ? 'research' : 'arch';
+    var sets = {
+      arch: { title: 'How it fits together', nodes: c.indexOf('ai') !== -1 ? ['Client — React / RN', 'API / Services', 'Data + AI model'] : ['Client — React / TS', 'API / Services', 'Database'], cap: 'A clean, layered architecture.' },
+      hardware: { title: 'Signal path', nodes: ['Sensor input — SPI', 'FPGA logic — FSM · PLL', 'Display / output'], cap: 'End-to-end, entirely in hardware.' },
+      testing: { title: 'Quality pipeline', nodes: ['Write tests', 'Measure coverage', 'Mutation testing', 'CI quality gate'], cap: 'Quality enforced, not hoped for.' },
+      security: { title: 'Methodology', nodes: ['Recon', 'Exploit', 'Analyze', 'Defend'], cap: 'Offense informs defense.' },
+      research: { title: 'Approach', nodes: ['Extract / define', 'Model', 'Verify / evaluate'], cap: 'From requirements to proof.' }
+    };
+    var s = sets[type];
+    var flow = s.nodes.map(function (n, i) {
+      return (i ? '<span class="flow-arrow">▼</span>' : '') + '<div class="flow-node">' + esc(n) + '</div>';
+    }).join('');
+    return '<div class="slide-3d panel diagram"><h4>' + esc(s.title) + '</h4><div class="flow">' + flow + '</div><p class="diagram-cap">' + esc(s.cap) + '</p></div>';
+  }
+
   /* ---- Theme ---- */
   document.body.style.setProperty('--pa', p.accent[0]);
   document.body.style.setProperty('--pb', p.accent[1]);
@@ -76,6 +97,8 @@
     '<p>' + esc(p.tagline) + '</p>' +
     '</div></div>'
   );
+  // architecture / flow diagram
+  slidesHtml.push(diagramSlide(p));
   // real screenshots
   (p.shots || []).forEach(function (s) {
     slidesHtml.push(

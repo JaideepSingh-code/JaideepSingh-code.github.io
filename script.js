@@ -200,6 +200,37 @@
     });
   })();
 
+  /* ---- Contact form (Formspree, with mailto fallback) ---- */
+  (function () {
+    var form = document.getElementById('contactForm');
+    if (!form) return;
+    var statusEl = document.getElementById('cfStatus');
+    var endpoint = (typeof window !== 'undefined' && window.FORMSPREE_ENDPOINT) || '';
+    function set(msg, cls) { statusEl.textContent = msg; statusEl.className = 'cf-status' + (cls ? ' ' + cls : ''); }
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var name = document.getElementById('cfName').value.trim();
+      var email = document.getElementById('cfEmail').value.trim();
+      var msg = document.getElementById('cfMsg').value.trim();
+      if (!name || !email || !msg) { set('Please fill in all three fields.', 'err'); return; }
+      if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) { set("That email doesn't look right.", 'err'); return; }
+      if (endpoint) {
+        set('Sending…', '');
+        fetch(endpoint, {
+          method: 'POST', headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name: name, email: email, message: msg })
+        })
+          .then(function (r) { if (!r.ok) throw new Error(); form.reset(); set("Thanks, " + name.split(' ')[0] + "! I'll be in touch soon. 🙌", 'ok'); })
+          .catch(function () { set('Something went wrong — please email jaideep.engineer@gmail.com directly.', 'err'); });
+      } else {
+        var subject = encodeURIComponent('Portfolio message from ' + name);
+        var body = encodeURIComponent(msg + '\n\n— ' + name + ' (' + email + ')');
+        window.location.href = 'mailto:jaideep.engineer@gmail.com?subject=' + subject + '&body=' + body;
+        set('Opening your email app…', 'ok');
+      }
+    });
+  })();
+
   /* ========================================================
      AI assistant — client-side, knowledge-base driven.
      Grounded in real achievements, tuned to present Jaideep

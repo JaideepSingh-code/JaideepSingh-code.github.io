@@ -86,6 +86,13 @@
 .panel-chips { display: flex; flex-wrap: wrap; gap: 8px; align-content: flex-start; }
 .panel-chips span { font-family: var(--font-mono); font-size: .8rem; padding: 6px 12px; border-radius: 8px; background: color-mix(in srgb, var(--pa) 10%, var(--paper)); color: color-mix(in srgb, var(--pa) 75%, var(--ink)); border: 1px solid color-mix(in srgb, var(--pa) 22%, var(--line)); }
 
+/* diagram slide */
+.slide-3d.diagram { justify-content: flex-start; }
+.flow { display: flex; flex-direction: column; gap: 5px; margin-top: 4px; }
+.flow-node { background: color-mix(in srgb, var(--pa) 12%, var(--card)); border: 1px solid color-mix(in srgb, var(--pa) 28%, var(--line)); border-radius: 10px; padding: 10px 14px; font-size: .9rem; font-weight: 600; color: var(--ink); text-align: center; }
+.flow-arrow { align-self: center; color: var(--pa); font-size: .68rem; line-height: .9; opacity: .8; }
+.diagram-cap { margin-top: 12px; font-size: .82rem; color: var(--muted); font-style: italic; }
+
 .gallery-ctrls { display: flex; align-items: center; justify-content: center; gap: 18px; margin-top: 14px; }
 .g-btn { width: 48px; height: 48px; border-radius: 50%; border: 1px solid var(--line); background: var(--card); color: var(--ink); font-size: 1.5rem; line-height: 1; cursor: pointer; transition: .2s; box-shadow: var(--shadow-sm); }
 .g-btn:hover { border-color: var(--pa); color: var(--pa); transform: translateY(-2px); }
