@@ -18,8 +18,32 @@
   document.body.style.setProperty('--pa', p.accent[0]);
   document.body.style.setProperty('--pb', p.accent[1]);
 
+  /* ---- SEO meta (Googlebot renders JS) ---- */
+  var canonical = 'https://jaideepsingh.dev/project.html?p=' + slug;
+  var metaDesc = p.title + ' — ' + p.tagline + '. ' + p.overview.slice(0, 150);
+  document.title = p.title + ' — Jaideep Singh | Software Engineer';
+  function setAttr(id, attr, val) { var el = $(id); if (el) el.setAttribute(attr, val); }
+  setAttr('mDesc', 'content', metaDesc);
+  setAttr('ogTitle', 'content', p.title + ' — Jaideep Singh');
+  setAttr('ogDesc', 'content', p.tagline);
+  setAttr('ogUrl', 'content', canonical);
+  setAttr('canon', 'href', canonical);
+  var ld = document.createElement('script');
+  ld.type = 'application/ld+json';
+  ld.textContent = JSON.stringify({
+    '@context': 'https://schema.org',
+    '@type': 'SoftwareSourceCode',
+    name: p.title,
+    description: p.overview,
+    url: canonical,
+    codeRepository: p.repo,
+    keywords: p.tech.join(', '),
+    about: p.category,
+    author: { '@type': 'Person', name: 'Jaideep Singh', url: 'https://jaideepsingh.dev' }
+  });
+  document.head.appendChild(ld);
+
   /* ---- Head + hero ---- */
-  document.title = p.title + ' — Jaideep Singh';
   $('projCat').textContent = p.category;
   $('projTitle').textContent = p.title;
   $('projTagline').textContent = p.overview ? p.tagline : p.tagline;
