@@ -181,25 +181,6 @@
     });
   })();
 
-  /* ---- Smooth page transitions on internal navigation ---- */
-  (function () {
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    document.addEventListener('click', function (e) {
-      var a = e.target.closest('a');
-      if (!a) return;
-      var href = a.getAttribute('href') || '';
-      if (a.target === '_blank' || a.hasAttribute('download')) return;
-      if (!href || href.charAt(0) === '#' || href.indexOf('mailto:') === 0) return;
-      var url;
-      try { url = new URL(a.href, location.href); } catch (e2) { return; }
-      if (url.origin !== location.origin) return;
-      if (url.pathname === location.pathname && url.search === location.search) return;
-      e.preventDefault();
-      document.body.classList.add('page-leave');
-      setTimeout(function () { location.href = a.href; }, 240);
-    });
-  })();
-
   /* ---- Contact form (Formspree, with mailto fallback) ---- */
   (function () {
     var form = document.getElementById('contactForm');
