@@ -124,6 +124,13 @@
   var EMAIL = 'jaideep.engineer@gmail.com';
   var FALLBACK = "Great question! I might not have that exact detail, but here's the short version: Jaideep is a full-stack software engineer with a standout <strong>testing &amp; QA</strong> specialty, real <strong>AI/ML</strong> and <strong>cloud</strong> experience, and <strong>11+ shipped projects</strong>. Try asking about his <strong>experience</strong>, <strong>skills</strong>, <strong>AI work</strong>, <strong>testing</strong>, or whether he's <strong>available</strong> — or email him directly at <a href=\"mailto:" + EMAIL + "\">" + EMAIL + "</a>.";
 
+  // Optional real-LLM upgrade: set window.JAIDEEP_BOT_ENDPOINT to a serverless
+  // proxy URL (see worker/bot-worker.js). When unset, the local KB is used.
+  var BOT_ENDPOINT = (typeof window !== 'undefined' && window.JAIDEEP_BOT_ENDPOINT) || '';
+  var history = [];
+  var CONT = ['yes', 'yeah', 'yep', 'yup', 'sure', 'ok', 'okay', 'ya', 'please', 'more', 'continue', 'elaborate', 'expand', 'deeper', 'definitely', 'absolutely'];
+  var EXPAND = "Happy to go deeper! Here's the quick tour:\n• 🧪 <strong>Testing &amp; QA</strong> — 1,938 tests on Apache Commons CLI at 98% coverage, and lifted a 50-algorithm codebase to a 79% mutation score.\n• 🤖 <strong>AI/ML</strong> — fine-tuned LLaMA 7B/13B with LoRA for SalonAI.\n• 🧩 <strong>Full-stack</strong> — React/TypeScript + FastAPI/Django (e.g. a real-time auction platform).\n• ☁️ <strong>Cloud</strong> — AWS Cloud Club, Docker, Kubernetes, GitHub Actions.\nAsk me about any of these — or whether he's available. 😊";
+
   var KB = [
     { k: ['hello', 'hi', 'hey', 'yo', 'sup', 'greetings', 'good morning', 'good afternoon', 'howdy'],
       a: "Hey! 👋 I'm Jaideep's AI assistant — ask me anything about his skills, experience, or projects. Popular: <em>“Why should we hire him?”</em>, <em>“What's his strongest skill?”</em>, or <em>“Is he available?”</em>" },
@@ -232,10 +239,36 @@
     log.appendChild(t); scrollLog();
     return t;
   }
+  function escapeHtml(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+  function linkifyEmails(h) { return h.replace(/([a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,})/gi, '<a href="mailto:$1">$1</a>'); }
+
+  // Treat short affirmatives / "tell me more" as a request to expand,
+  // instead of bouncing to the fallback.
+  function isContinuation(q) {
+    var toks = q.toLowerCase().replace(/[^a-z ]/g, ' ').split(/\s+/).filter(Boolean);
+    if (!toks.length || toks.length > 4) return false;
+    return toks.some(function (t) { return CONT.indexOf(t) !== -1; });
+  }
+  function localRespond(q) { return isContinuation(q) ? EXPAND : answer(q); }
+
   function botReply(q) {
     var t = typing();
-    var delay = 420 + Math.random() * 420;
-    setTimeout(function () { t.remove(); addBot(answer(q)); }, delay);
+    if (BOT_ENDPOINT) {
+      fetch(BOT_ENDPOINT, {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ question: q, history: history.slice(-8) })
+      })
+        .then(function (r) { if (!r.ok) throw new Error('bad'); return r.json(); })
+        .then(function (d) {
+          t.remove();
+          var rep = d && d.reply ? linkifyEmails(escapeHtml(d.reply)).replace(/\n/g, '<br>') : localRespond(q);
+          addBot(rep);
+          if (d && d.reply) history.push({ role: 'assistant', content: d.reply });
+        })
+        .catch(function () { t.remove(); addBot(localRespond(q)); });
+    } else {
+      setTimeout(function () { t.remove(); addBot(localRespond(q)); }, 420 + Math.random() * 420);
+    }
   }
 
   function buildSuggestions() {
@@ -259,6 +292,7 @@
     q = (q || '').trim();
     if (!q) return;
     addUser(q);
+    history.push({ role: 'user', content: q });
     input.value = '';
     botReply(q);
   }
