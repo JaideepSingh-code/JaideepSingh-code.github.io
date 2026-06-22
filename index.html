@@ -4,41 +4,27 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Jaideep Singh — Software Engineer</title>
-  <meta name="description" content="Jaideep Singh — Software Engineer based in Toronto. Full-stack development, software testing & QA, AI/ML, security, and FPGA hardware. Building reliable, well-tested systems." />
+  <meta name="description" content="Jaideep Singh — Software Engineer. Full-stack development, AI/ML, rigorous testing & QA, security, and FPGA hardware. I build reliable software that holds up in production." />
   <meta name="author" content="Jaideep Singh" />
-  <link rel="canonical" href="https://jaideepsingh.com/" />
+  <link rel="canonical" href="https://jaideepsingh.dev/" />
 
-  <!-- Open Graph / social -->
   <meta property="og:type" content="website" />
   <meta property="og:title" content="Jaideep Singh — Software Engineer" />
-  <meta property="og:description" content="Full-stack development, testing & QA, AI/ML, security, and FPGA hardware. Toronto-based software engineer." />
-  <meta property="og:url" content="https://jaideepsingh.com/" />
+  <meta property="og:description" content="Full-stack development, AI/ML, testing & QA, security, and FPGA hardware. I build reliable software that holds up in production." />
+  <meta property="og:url" content="https://jaideepsingh.dev/" />
   <meta name="twitter:card" content="summary_large_image" />
 
   <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
 
-  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
 
   <link rel="stylesheet" href="styles.css" />
-
-  <!-- Mark JS as available before first paint, so reveal-on-scroll only
-       hides content when JS can also un-hide it (graceful no-JS fallback). -->
   <script>document.documentElement.classList.add('js');</script>
 </head>
 <body>
-  <!-- Scroll progress -->
   <div class="scroll-progress" id="scrollProgress" aria-hidden="true"></div>
-
-  <!-- Animated background -->
-  <div class="bg-layer" aria-hidden="true">
-    <div class="bg-grid"></div>
-    <div class="blob blob-1"></div>
-    <div class="blob blob-2"></div>
-    <div class="blob blob-3"></div>
-  </div>
 
   <!-- Navigation -->
   <header class="nav" id="nav">
@@ -53,9 +39,11 @@
         <a href="#experience">Experience</a>
         <a href="#projects">Projects</a>
         <a href="#leadership">Leadership</a>
-        <a href="#contact">Contact</a>
       </nav>
-      <a href="assets/Jaideep-Singh-Resume.pdf" class="btn btn-ghost nav-resume" target="_blank" rel="noopener">Résumé</a>
+      <div class="nav-actions">
+        <button class="btn btn-soft nav-ask" id="navAsk">✦ Ask my AI</button>
+        <a href="#contact" class="btn btn-primary nav-contact">Get in touch</a>
+      </div>
       <button class="nav-toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false">
         <span></span><span></span><span></span>
       </button>
@@ -74,44 +62,57 @@
   <main id="top">
     <!-- Hero -->
     <section class="hero" id="hero">
-      <canvas id="hero-canvas" aria-hidden="true"></canvas>
-      <div class="container hero-inner">
-        <p class="hero-eyebrow reveal">
-          <span class="status-dot"></span> Open to new-grad &amp; software engineering roles
-        </p>
-        <h1 class="hero-title reveal">
-          Hi, I'm <span class="grad-text">Jaideep Singh</span>.<br />
-          I build reliable, well-tested software.
-        </h1>
-        <p class="hero-sub reveal">
-          Software Engineer in Toronto and a 2026 York University graduate.
-          I work across the stack — from <strong>full-stack web apps</strong> and <strong>AI/ML systems</strong>
-          to <strong>rigorous testing &amp; QA</strong>, <strong>security</strong>, and <strong>FPGA hardware</strong>.
-        </p>
-        <div class="hero-cta reveal">
-          <a href="#projects" class="btn btn-primary">View my work</a>
-          <a href="#contact" class="btn btn-ghost">Get in touch</a>
+      <div class="container hero-grid">
+        <div class="hero-main">
+          <p class="hero-eyebrow reveal"><span class="status-dot"></span> Available for software engineering roles</p>
+          <h1 class="hero-title reveal">I build reliable, <span class="accent-text">well-tested</span> software.</h1>
+          <p class="hero-sub reveal">
+            I'm <strong>Jaideep Singh</strong>, a software engineer with a builder's range — from
+            <strong>full-stack apps</strong> and <strong>AI/ML systems</strong> to <strong>rigorous testing &amp; QA</strong>,
+            <strong>security</strong>, and <strong>FPGA hardware</strong>. I care about software that holds up in production.
+          </p>
+          <div class="hero-cta reveal">
+            <a href="#projects" class="btn btn-primary btn-lg">View my work</a>
+            <button class="btn btn-outline btn-lg" id="heroAsk">✦ Ask my AI about me</button>
+          </div>
+          <div class="hero-socials reveal">
+            <a href="https://github.com/JaideepSingh-code" target="_blank" rel="noopener" aria-label="GitHub">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M12 .5C5.37.5 0 5.78 0 12.29c0 5.21 3.44 9.63 8.21 11.19.6.11.82-.25.82-.57v-2.2c-3.34.71-4.04-1.58-4.04-1.58-.55-1.36-1.34-1.73-1.34-1.73-1.09-.73.08-.72.08-.72 1.2.08 1.84 1.21 1.84 1.21 1.07 1.79 2.81 1.27 3.5.97.11-.76.42-1.27.76-1.56-2.67-.3-5.47-1.3-5.47-5.78 0-1.28.47-2.32 1.24-3.14-.12-.3-.54-1.52.12-3.18 0 0 1.01-.32 3.3 1.2a11.6 11.6 0 0 1 6 0c2.29-1.52 3.3-1.2 3.3-1.2.66 1.66.24 2.88.12 3.18.77.82 1.23 1.86 1.23 3.14 0 4.49-2.8 5.48-5.48 5.77.43.37.81 1.1.81 2.22v3.29c0 .32.22.69.83.57A12.01 12.01 0 0 0 24 12.29C24 5.78 18.63.5 12 .5z"/></svg>
+            </a>
+            <a href="https://www.linkedin.com/in/jaideep-singh-163585237/" target="_blank" rel="noopener" aria-label="LinkedIn">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.13 1.45-2.13 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.07 2.07 0 1 1 0-4.14 2.07 2.07 0 0 1 0 4.14zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.72v20.56C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.72V1.72C24 .77 23.2 0 22.22 0z"/></svg>
+            </a>
+            <a href="mailto:jaideep.engineer@gmail.com" aria-label="Email">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M22 4H2a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h20a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2zm-.4 4.25-8.13 5.42a2 2 0 0 1-2.22 0L2.4 8.25a.6.6 0 0 1 .67-1l8.93 5.95 8.93-5.95a.6.6 0 0 1 .67 1z"/></svg>
+            </a>
+            <a href="assets/Jaideep-Singh-Resume.pdf" target="_blank" rel="noopener" class="hero-resume">Résumé ↗</a>
+          </div>
         </div>
-        <div class="hero-socials reveal">
-          <a href="https://github.com/JaideepSingh-code" target="_blank" rel="noopener" aria-label="GitHub">
-            <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M12 .5C5.37.5 0 5.78 0 12.29c0 5.21 3.44 9.63 8.21 11.19.6.11.82-.25.82-.57v-2.2c-3.34.71-4.04-1.58-4.04-1.58-.55-1.36-1.34-1.73-1.34-1.73-1.09-.73.08-.72.08-.72 1.2.08 1.84 1.21 1.84 1.21 1.07 1.79 2.81 1.27 3.5.97.11-.76.42-1.27.76-1.56-2.67-.3-5.47-1.3-5.47-5.78 0-1.28.47-2.32 1.24-3.14-.12-.3-.54-1.52.12-3.18 0 0 1.01-.32 3.3 1.2a11.6 11.6 0 0 1 6 0c2.29-1.52 3.3-1.2 3.3-1.2.66 1.66.24 2.88.12 3.18.77.82 1.23 1.86 1.23 3.14 0 4.49-2.8 5.48-5.48 5.77.43.37.81 1.1.81 2.22v3.29c0 .32.22.69.83.57A12.01 12.01 0 0 0 24 12.29C24 5.78 18.63.5 12 .5z"/></svg>
-          </a>
-          <a href="https://www.linkedin.com/in/jaideep-singh-163585237/" target="_blank" rel="noopener" aria-label="LinkedIn" data-needs-url="linkedin">
-            <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.13 1.45-2.13 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.07 2.07 0 1 1 0-4.14 2.07 2.07 0 0 1 0 4.14zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.72v20.56C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.72V1.72C24 .77 23.2 0 22.22 0z"/></svg>
-          </a>
-          <a href="mailto:jaideep.engineer@gmail.com" aria-label="Email">
-            <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M22 4H2a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h20a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2zm-.4 4.25-8.13 5.42a2 2 0 0 1-2.22 0L2.4 8.25a.6.6 0 0 1 .67-1l8.93 5.95 8.93-5.95a.6.6 0 0 1 .67 1z"/></svg>
-          </a>
-        </div>
+
+        <aside class="hero-card reveal" aria-label="Quick facts">
+          <div class="hc-row">
+            <span class="hc-avatar">JS</span>
+            <div>
+              <strong class="hc-name">Jaideep Singh</strong>
+              <span class="hc-role">Software Engineer</span>
+            </div>
+          </div>
+          <div class="hc-now">
+            <span class="hc-label">Currently</span>
+            Software Developer @ Snz Infotech
+          </div>
+          <ul class="hc-stats">
+            <li><b>11+</b><span>Projects</span></li>
+            <li><b>1.9k+</b><span>Tests written</span></li>
+            <li><b>98%</b><span>Peak coverage</span></li>
+            <li><b>5</b><span>Domains</span></li>
+          </ul>
+          <div class="hc-tags">
+            <span>Full-Stack</span><span>AI / ML</span><span>Testing</span><span>Security</span><span>Cloud</span>
+          </div>
+          <div class="hc-avail"><span class="status-dot"></span> Open to remote &amp; relocation</div>
+        </aside>
       </div>
-      <div class="hero-hud" aria-hidden="true">
-        <span><span class="hud-key">system.status</span> <span class="hud-ok">online</span></span>
-        <span><span class="hud-key">location</span> 43.65°N · 79.38°W // Toronto</span>
-        <span><span class="hud-key">stack</span> full-stack · ai/ml · testing · security · fpga</span>
-      </div>
-      <a href="#about" class="scroll-cue" aria-label="Scroll down">
-        <span></span>
-      </a>
     </section>
 
     <!-- About -->
@@ -123,41 +124,32 @@
         </div>
         <div class="about-grid">
           <div class="about-text reveal">
-            <p>
-              I'm a <strong>Software Engineering graduate</strong> (Specialized Honours) from the Lassonde
-              School of Engineering, York University, and a York International Scholarship recipient.
-              I'm currently a <strong>Software Developer at Snz Infotech</strong>, shipping
-              full-stack features, REST APIs, and well-tested code for client projects.
+            <p class="lead">
+              I'm a software engineer who likes to make things that don't break.
             </p>
             <p>
-              What I enjoy most is making software that holds up under pressure. That curiosity has
-              taken me from building <strong>AI-powered platforms</strong> and full-stack apps, to writing
-              thousands of automated tests with mutation testing and formal verification, to exploiting
-              CVEs in security labs, and even bridging accelerometers to VGA displays
-              <strong>entirely in hardware</strong> on an FPGA.
+              I work across the entire stack — and beyond it. I studied <strong>Software Engineering
+              (Specialized Honours)</strong> at York University's Lassonde School of Engineering, and
+              I'm currently a <strong>Software Developer at Snz Infotech</strong>, shipping full-stack
+              features, REST APIs, and well-tested code for client projects.
             </p>
             <p>
-              Outside of code, I serve on the City of Markham's Environmental Advisory Committee and
-              mentor youth teams building AI for social good.
+              My edge is range plus rigor: I've built <strong>AI-powered platforms</strong> and full-stack
+              apps, written <strong>thousands of automated tests</strong> with mutation testing and formal
+              verification, exploited CVEs in security labs, contributed to a student <strong>AWS cloud
+              community</strong>, and even bridged accelerometers to VGA displays <strong>entirely in
+              hardware</strong> on an FPGA. Give me an unfamiliar problem and I'll figure it out — fast.
             </p>
           </div>
-          <div class="about-stats reveal">
-            <div class="stat-card">
-              <span class="stat-num" data-count="11">0</span>
-              <span class="stat-label">Shipped projects</span>
-            </div>
-            <div class="stat-card">
-              <span class="stat-num">2026</span>
-              <span class="stat-label">B.Eng — Graduate</span>
-            </div>
-            <div class="stat-card">
-              <span class="stat-num" data-count="6">0</span>
-              <span class="stat-label">Engineering domains</span>
-            </div>
-            <div class="stat-card">
-              <span class="stat-num gradient-mini">∞</span>
-              <span class="stat-label">Tests written</span>
-            </div>
+          <div class="about-side reveal">
+            <h3>What I bring</h3>
+            <ul class="check-list">
+              <li>Full-stack delivery — React/TS front-ends, FastAPI/Django back-ends</li>
+              <li>A genuine testing &amp; QA specialty — coverage, mutation, CI quality gates</li>
+              <li>Applied AI/ML — LLM fine-tuning, prompt engineering, NLP</li>
+              <li>Cloud &amp; DevOps — Docker, Kubernetes, GitHub Actions, AWS</li>
+              <li>Ownership: I debug, document, and ship</li>
+            </ul>
           </div>
         </div>
       </div>
@@ -173,58 +165,35 @@
         <div class="skills-grid">
           <div class="skill-card reveal">
             <h3>Languages</h3>
-            <ul class="chips">
-              <li>Java</li><li>Python</li><li>SQL</li><li>JavaScript</li><li>TypeScript</li>
-              <li>HTML/CSS</li><li>SystemVerilog</li><li>Verilog</li>
-            </ul>
+            <ul class="chips"><li>Java</li><li>Python</li><li>SQL</li><li>JavaScript</li><li>TypeScript</li><li>HTML/CSS</li><li>SystemVerilog</li><li>Verilog</li></ul>
           </div>
           <div class="skill-card reveal">
             <h3>Frameworks &amp; Libraries</h3>
-            <ul class="chips">
-              <li>React</li><li>React Native</li><li>FastAPI</li><li>Django</li>
-              <li>Flask</li><li>Tailwind CSS</li><li>Java Swing</li>
-            </ul>
+            <ul class="chips"><li>React</li><li>React Native</li><li>FastAPI</li><li>Django</li><li>Flask</li><li>Tailwind CSS</li><li>Java Swing</li></ul>
           </div>
           <div class="skill-card reveal">
             <h3>Databases</h3>
-            <ul class="chips">
-              <li>PostgreSQL</li><li>MySQL</li><li>Firestore</li><li>pgTAP</li><li>pg_prove</li>
-            </ul>
+            <ul class="chips"><li>PostgreSQL</li><li>MySQL</li><li>Firestore</li><li>pgTAP</li><li>pg_prove</li></ul>
           </div>
           <div class="skill-card reveal">
-            <h3>DevOps &amp; Tools</h3>
-            <ul class="chips">
-              <li>Docker</li><li>Docker Compose</li><li>Kubernetes</li><li>Git</li>
-              <li>GitHub Actions</li><li>Maven</li><li>Gradle</li>
-            </ul>
+            <h3>Cloud, DevOps &amp; Tools</h3>
+            <ul class="chips"><li>AWS</li><li>Docker</li><li>Docker Compose</li><li>Kubernetes</li><li>Git</li><li>GitHub Actions</li><li>Maven</li><li>Gradle</li></ul>
           </div>
           <div class="skill-card reveal">
             <h3>AI / ML</h3>
-            <ul class="chips">
-              <li>LLaMA 7B/13B</li><li>LoRA / QLoRA</li><li>Prompt engineering</li>
-              <li>LLM test generation</li><li>spaCy (NLP)</li>
-            </ul>
+            <ul class="chips"><li>LLaMA 7B/13B</li><li>LoRA / QLoRA</li><li>Prompt engineering</li><li>LLM test generation</li><li>spaCy (NLP)</li></ul>
           </div>
           <div class="skill-card reveal">
             <h3>Testing &amp; QA</h3>
-            <ul class="chips">
-              <li>JUnit</li><li>JaCoCo</li><li>PIT Mutation</li><li>EvoSuite</li>
-              <li>SpotBugs</li><li>pytest</li><li>pgTAP</li>
-            </ul>
+            <ul class="chips"><li>JUnit</li><li>JaCoCo</li><li>PIT Mutation</li><li>EvoSuite</li><li>SpotBugs</li><li>pytest</li><li>pgTAP</li></ul>
           </div>
           <div class="skill-card reveal">
             <h3>Security</h3>
-            <ul class="chips">
-              <li>OpenSSL (AES/RSA)</li><li>YARA</li><li>Snort IDS/IPS</li>
-              <li>XSS / CSRF</li><li>John the Ripper</li><li>Hydra</li>
-            </ul>
+            <ul class="chips"><li>OpenSSL (AES/RSA)</li><li>YARA</li><li>Snort IDS/IPS</li><li>XSS / CSRF</li><li>John the Ripper</li><li>Hydra</li></ul>
           </div>
           <div class="skill-card reveal">
             <h3>Hardware</h3>
-            <ul class="chips">
-              <li>Intel MAX10 FPGA</li><li>DE10-Lite</li><li>SPI protocol</li>
-              <li>VGA timing</li><li>PLL synthesis</li><li>FSM design</li>
-            </ul>
+            <ul class="chips"><li>Intel MAX10 FPGA</li><li>DE10-Lite</li><li>SPI protocol</li><li>VGA timing</li><li>PLL synthesis</li><li>FSM design</li></ul>
           </div>
         </div>
       </div>
@@ -245,7 +214,7 @@
                 <h3>Software Developer</h3>
                 <span class="tl-date">Apr 2026 — Present</span>
               </div>
-              <p class="tl-org">Snz Infotech Private Limited · Remote (India)</p>
+              <p class="tl-org">Snz Infotech Private Limited · Remote</p>
               <ul class="tl-points">
                 <li>Build and maintain full-stack web applications with Java, JavaScript, and modern frontend frameworks across client projects.</li>
                 <li>Design and implement RESTful APIs and backend services handling data processing, validation, and SQL database interactions.</li>
@@ -259,16 +228,30 @@
             <div class="tl-marker"></div>
             <div class="tl-content">
               <div class="tl-head">
+                <h3>Technical Associate <span class="tl-badge">☁️ AWS</span></h3>
+                <span class="tl-date">Dec 2025 — Mar 2026</span>
+              </div>
+              <p class="tl-org">AWS Cloud Club at York University</p>
+              <ul class="tl-points">
+                <li>Served as a Technical Associate in York University's AWS Cloud Club, a student community focused on hands-on cloud skills.</li>
+                <li>Supported and ran hands-on AWS workshops and study sessions, helping peers get practical with core cloud services.</li>
+                <li>Built and demoed cloud projects and shared best practices for deploying and scaling applications on AWS.</li>
+              </ul>
+            </div>
+          </div>
+          <div class="tl-item reveal">
+            <div class="tl-marker"></div>
+            <div class="tl-content">
+              <div class="tl-head">
                 <h3>Scheduler / Dispatcher / ERS Agent</h3>
                 <span class="tl-date">Oct 2022 — Present</span>
               </div>
-              <p class="tl-org">Avis Budget Group Inc. · Etobicoke, ON</p>
+              <p class="tl-org">Avis Budget Group Inc.</p>
               <ul class="tl-points">
                 <li>Coordinate fleet dispatch, vehicle positioning, and inventory across a high-volume rental operation, minimizing customer delays.</li>
                 <li><strong>Rebuilt the workforce scheduling system after an operational data loss</strong>, restoring continuity and improving accuracy.</li>
                 <li>Developed the <strong>dispatch tracking template now used organization-wide</strong>, improving task visibility and cross-team coordination.</li>
-                <li>Provide Emergency Roadside Services for breakdowns, accidents, and recovery — handling escalations with safety first.</li>
-                <li>Trained new ERS agents and authored quick-reference guides adopted by the team for faster onboarding.</li>
+                <li>Trained new agents and authored quick-reference guides adopted by the team for faster onboarding.</li>
               </ul>
             </div>
           </div>
@@ -296,183 +279,93 @@
         </div>
 
         <div class="projects-grid" id="projectsGrid">
-
-          <!-- SalonAI -->
           <article class="project-card reveal" data-cats="fullstack ai">
-            <div class="pc-top">
-              <span class="pc-icon">🤖</span>
-              <a class="pc-link" href="https://github.com/JaideepSingh-code/SalonAI" target="_blank" rel="noopener" aria-label="SalonAI on GitHub">
-                <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 .5C5.37.5 0 5.78 0 12.29c0 5.21 3.44 9.63 8.21 11.19.6.11.82-.25.82-.57v-2.2c-3.34.71-4.04-1.58-4.04-1.58-.55-1.36-1.34-1.73-1.34-1.73-1.09-.73.08-.72.08-.72 1.2.08 1.84 1.21 1.84 1.21 1.07 1.79 2.81 1.27 3.5.97.11-.76.42-1.27.76-1.56-2.67-.3-5.47-1.3-5.47-5.78 0-1.28.47-2.32 1.24-3.14-.12-.3-.54-1.52.12-3.18 0 0 1.01-.32 3.3 1.2a11.6 11.6 0 0 1 6 0c2.29-1.52 3.3-1.2 3.3-1.2.66 1.66.24 2.88.12 3.18.77.82 1.23 1.86 1.23 3.14 0 4.49-2.8 5.48-5.48 5.77.43.37.81 1.1.81 2.22v3.29c0 .32.22.69.83.57A12.01 12.01 0 0 0 24 12.29C24 5.78 18.63.5 12 .5z"/></svg>
-              </a>
-            </div>
+            <div class="pc-top"><span class="pc-icon">🤖</span><a class="pc-link" href="https://github.com/JaideepSingh-code/SalonAI" target="_blank" rel="noopener" aria-label="SalonAI on GitHub"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 .5C5.37.5 0 5.78 0 12.29c0 5.21 3.44 9.63 8.21 11.19.6.11.82-.25.82-.57v-2.2c-3.34.71-4.04-1.58-4.04-1.58-.55-1.36-1.34-1.73-1.34-1.73-1.09-.73.08-.72.08-.72 1.2.08 1.84 1.21 1.84 1.21 1.07 1.79 2.81 1.27 3.5.97.11-.76.42-1.27.76-1.56-2.67-.3-5.47-1.3-5.47-5.78 0-1.28.47-2.32 1.24-3.14-.12-.3-.54-1.52.12-3.18 0 0 1.01-.32 3.3 1.2a11.6 11.6 0 0 1 6 0c2.29-1.52 3.3-1.2 3.3-1.2.66 1.66.24 2.88.12 3.18.77.82 1.23 1.86 1.23 3.14 0 4.49-2.8 5.48-5.48 5.77.43.37.81 1.1.81 2.22v3.29c0 .32.22.69.83.57A12.01 12.01 0 0 0 24 12.29C24 5.78 18.63.5 12 .5z"/></svg></a></div>
             <h3>SalonAI</h3>
             <p class="pc-tagline">AI-powered salon management system</p>
             <p class="pc-desc">Built with a 7-person team: 15 REST endpoints for booking, price estimation, and hairstyle recommendations across 6 face-shape profiles. 3-tier architecture (React/React Native · Django REST · LLaMA 7B/13B fine-tuned with LoRA on 2× V100), with RBAC, JWT, and Kubernetes orchestration.</p>
-            <ul class="chips small">
-              <li>React</li><li>Django</li><li>LLaMA</li><li>PostgreSQL</li><li>Docker</li><li>K8s</li>
-            </ul>
+            <ul class="chips small"><li>React</li><li>Django</li><li>LLaMA</li><li>PostgreSQL</li><li>Docker</li><li>K8s</li></ul>
           </article>
 
-          <!-- Auction -->
           <article class="project-card reveal" data-cats="fullstack">
-            <div class="pc-top">
-              <span class="pc-icon">🛒</span>
-              <a class="pc-link" href="https://github.com/JaideepSingh-code/Auction-Ecommerce-Platform" target="_blank" rel="noopener" aria-label="Auction platform on GitHub">
-                <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 .5C5.37.5 0 5.78 0 12.29c0 5.21 3.44 9.63 8.21 11.19.6.11.82-.25.82-.57v-2.2c-3.34.71-4.04-1.58-4.04-1.58-.55-1.36-1.34-1.73-1.34-1.73-1.09-.73.08-.72.08-.72 1.2.08 1.84 1.21 1.84 1.21 1.07 1.79 2.81 1.27 3.5.97.11-.76.42-1.27.76-1.56-2.67-.3-5.47-1.3-5.47-5.78 0-1.28.47-2.32 1.24-3.14-.12-.3-.54-1.52.12-3.18 0 0 1.01-.32 3.3 1.2a11.6 11.6 0 0 1 6 0c2.29-1.52 3.3-1.2 3.3-1.2.66 1.66.24 2.88.12 3.18.77.82 1.23 1.86 1.23 3.14 0 4.49-2.8 5.48-5.48 5.77.43.37.81 1.1.81 2.22v3.29c0 .32.22.69.83.57A12.01 12.01 0 0 0 24 12.29C24 5.78 18.63.5 12 .5z"/></svg>
-              </a>
-            </div>
+            <div class="pc-top"><span class="pc-icon">🛒</span><a class="pc-link" href="https://github.com/JaideepSingh-code/Auction-Ecommerce-Platform" target="_blank" rel="noopener" aria-label="Auction platform on GitHub"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 .5C5.37.5 0 5.78 0 12.29c0 5.21 3.44 9.63 8.21 11.19.6.11.82-.25.82-.57v-2.2c-3.34.71-4.04-1.58-4.04-1.58-.55-1.36-1.34-1.73-1.34-1.73-1.09-.73.08-.72.08-.72 1.2.08 1.84 1.21 1.84 1.21 1.07 1.79 2.81 1.27 3.5.97.11-.76.42-1.27.76-1.56-2.67-.3-5.47-1.3-5.47-5.78 0-1.28.47-2.32 1.24-3.14-.12-.3-.54-1.52.12-3.18 0 0 1.01-.32 3.3 1.2a11.6 11.6 0 0 1 6 0c2.29-1.52 3.3-1.2 3.3-1.2.66 1.66.24 2.88.12 3.18.77.82 1.23 1.86 1.23 3.14 0 4.49-2.8 5.48-5.48 5.77.43.37.81 1.1.81 2.22v3.29c0 .32.22.69.83.57A12.01 12.01 0 0 0 24 12.29C24 5.78 18.63.5 12 .5z"/></svg></a></div>
             <h3>Auction Bidding Platform</h3>
             <p class="pc-tagline">Real-time auction e-commerce</p>
             <p class="pc-desc">Full-stack auction platform: 15 API endpoints across 5 routers with real-time bid tracking, time-bound auctions, and Luhn-validated payments. FastAPI + PostgreSQL backend with bcrypt + JWT auth, 11 React/TS components, and 12 TDD pytest suites — all containerized for one-command deploy.</p>
-            <ul class="chips small">
-              <li>React</li><li>TypeScript</li><li>FastAPI</li><li>PostgreSQL</li><li>Docker</li>
-            </ul>
+            <ul class="chips small"><li>React</li><li>TypeScript</li><li>FastAPI</li><li>PostgreSQL</li><li>Docker</li></ul>
           </article>
 
-          <!-- Farmer's Hub -->
           <article class="project-card reveal" data-cats="fullstack">
-            <div class="pc-top">
-              <span class="pc-icon">🌾</span>
-              <a class="pc-link" href="https://github.com/JaideepSingh-code/Farmers-Hub" target="_blank" rel="noopener" aria-label="Farmers Hub on GitHub">
-                <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 .5C5.37.5 0 5.78 0 12.29c0 5.21 3.44 9.63 8.21 11.19.6.11.82-.25.82-.57v-2.2c-3.34.71-4.04-1.58-4.04-1.58-.55-1.36-1.34-1.73-1.34-1.73-1.09-.73.08-.72.08-.72 1.2.08 1.84 1.21 1.84 1.21 1.07 1.79 2.81 1.27 3.5.97.11-.76.42-1.27.76-1.56-2.67-.3-5.47-1.3-5.47-5.78 0-1.28.47-2.32 1.24-3.14-.12-.3-.54-1.52.12-3.18 0 0 1.01-.32 3.3 1.2a11.6 11.6 0 0 1 6 0c2.29-1.52 3.3-1.2 3.3-1.2.66 1.66.24 2.88.12 3.18.77.82 1.23 1.86 1.23 3.14 0 4.49-2.8 5.48-5.48 5.77.43.37.81 1.1.81 2.22v3.29c0 .32.22.69.83.57A12.01 12.01 0 0 0 24 12.29C24 5.78 18.63.5 12 .5z"/></svg>
-              </a>
-            </div>
+            <div class="pc-top"><span class="pc-icon">🌾</span><a class="pc-link" href="https://github.com/JaideepSingh-code/Farmers-Hub" target="_blank" rel="noopener" aria-label="Farmers Hub on GitHub"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 .5C5.37.5 0 5.78 0 12.29c0 5.21 3.44 9.63 8.21 11.19.6.11.82-.25.82-.57v-2.2c-3.34.71-4.04-1.58-4.04-1.58-.55-1.36-1.34-1.73-1.34-1.73-1.09-.73.08-.72.08-.72 1.2.08 1.84 1.21 1.84 1.21 1.07 1.79 2.81 1.27 3.5.97.11-.76.42-1.27.76-1.56-2.67-.3-5.47-1.3-5.47-5.78 0-1.28.47-2.32 1.24-3.14-.12-.3-.54-1.52.12-3.18 0 0 1.01-.32 3.3 1.2a11.6 11.6 0 0 1 6 0c2.29-1.52 3.3-1.2 3.3-1.2.66 1.66.24 2.88.12 3.18.77.82 1.23 1.86 1.23 3.14 0 4.49-2.8 5.48-5.48 5.77.43.37.81 1.1.81 2.22v3.29c0 .32.22.69.83.57A12.01 12.01 0 0 0 24 12.29C24 5.78 18.63.5 12 .5z"/></svg></a></div>
             <h3>Farmer's Hub</h3>
             <p class="pc-tagline">Agricultural marketplace app</p>
             <p class="pc-desc">A 2,888-line Java marketplace (51 source files) with dual user roles, cart, orders, and reviews. MVC with Repository + Strategy patterns enabling zero-code DB backend swapping via a config flag, plus 30 JUnit 5 tests with 40+ assertions and Gradle automation.</p>
-            <ul class="chips small">
-              <li>Java</li><li>Swing</li><li>PostgreSQL</li><li>Gradle</li><li>JUnit</li>
-            </ul>
+            <ul class="chips small"><li>Java</li><li>Swing</li><li>PostgreSQL</li><li>Gradle</li><li>JUnit</li></ul>
           </article>
 
-          <!-- Test Suite Analysis LLM -->
           <article class="project-card reveal" data-cats="testing ai">
-            <div class="pc-top">
-              <span class="pc-icon">📊</span>
-              <a class="pc-link" href="https://github.com/JaideepSingh-code/Test-Suite-Analysis-LLM" target="_blank" rel="noopener" aria-label="Test Suite Analysis on GitHub">
-                <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 .5C5.37.5 0 5.78 0 12.29c0 5.21 3.44 9.63 8.21 11.19.6.11.82-.25.82-.57v-2.2c-3.34.71-4.04-1.58-4.04-1.58-.55-1.36-1.34-1.73-1.34-1.73-1.09-.73.08-.72.08-.72 1.2.08 1.84 1.21 1.84 1.21 1.07 1.79 2.81 1.27 3.5.97.11-.76.42-1.27.76-1.56-2.67-.3-5.47-1.3-5.47-5.78 0-1.28.47-2.32 1.24-3.14-.12-.3-.54-1.52.12-3.18 0 0 1.01-.32 3.3 1.2a11.6 11.6 0 0 1 6 0c2.29-1.52 3.3-1.2 3.3-1.2.66 1.66.24 2.88.12 3.18.77.82 1.23 1.86 1.23 3.14 0 4.49-2.8 5.48-5.48 5.77.43.37.81 1.1.81 2.22v3.29c0 .32.22.69.83.57A12.01 12.01 0 0 0 24 12.29C24 5.78 18.63.5 12 .5z"/></svg>
-              </a>
-            </div>
+            <div class="pc-top"><span class="pc-icon">📊</span><a class="pc-link" href="https://github.com/JaideepSingh-code/Test-Suite-Analysis-LLM" target="_blank" rel="noopener" aria-label="Test Suite Analysis on GitHub"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 .5C5.37.5 0 5.78 0 12.29c0 5.21 3.44 9.63 8.21 11.19.6.11.82-.25.82-.57v-2.2c-3.34.71-4.04-1.58-4.04-1.58-.55-1.36-1.34-1.73-1.34-1.73-1.09-.73.08-.72.08-.72 1.2.08 1.84 1.21 1.84 1.21 1.07 1.79 2.81 1.27 3.5.97.11-.76.42-1.27.76-1.56-2.67-.3-5.47-1.3-5.47-5.78 0-1.28.47-2.32 1.24-3.14-.12-.3-.54-1.52.12-3.18 0 0 1.01-.32 3.3 1.2a11.6 11.6 0 0 1 6 0c2.29-1.52 3.3-1.2 3.3-1.2.66 1.66.24 2.88.12 3.18.77.82 1.23 1.86 1.23 3.14 0 4.49-2.8 5.48-5.48 5.77.43.37.81 1.1.81 2.22v3.29c0 .32.22.69.83.57A12.01 12.01 0 0 0 24 12.29C24 5.78 18.63.5 12 .5z"/></svg></a></div>
             <h3>Test Suite Analysis &amp; LLM Improvement</h3>
             <p class="pc-tagline">LLM-assisted coverage uplift</p>
             <p class="pc-desc">Analyzed coverage across 50 algorithm implementations with JaCoCo + PIT, then used targeted LLM test generation to lift line coverage 72.4%→89.2%, branch 58.1%→78.5%, and mutation score 61%→79%. Documented where short-circuit evaluation diverges branch from condition-decision coverage.</p>
-            <ul class="chips small">
-              <li>Java</li><li>JUnit</li><li>JaCoCo</li><li>PIT</li><li>LLM</li>
-            </ul>
+            <ul class="chips small"><li>Java</li><li>JUnit</li><li>JaCoCo</li><li>PIT</li><li>LLM</li></ul>
           </article>
 
-          <!-- Apache Commons CLI -->
           <article class="project-card reveal" data-cats="testing">
-            <div class="pc-top">
-              <span class="pc-icon">✅</span>
-              <a class="pc-link" href="https://github.com/JaideepSingh-code/Apache-Commons-CLI-Testing" target="_blank" rel="noopener" aria-label="Apache Commons CLI testing on GitHub">
-                <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 .5C5.37.5 0 5.78 0 12.29c0 5.21 3.44 9.63 8.21 11.19.6.11.82-.25.82-.57v-2.2c-3.34.71-4.04-1.58-4.04-1.58-.55-1.36-1.34-1.73-1.34-1.73-1.09-.73.08-.72.08-.72 1.2.08 1.84 1.21 1.84 1.21 1.07 1.79 2.81 1.27 3.5.97.11-.76.42-1.27.76-1.56-2.67-.3-5.47-1.3-5.47-5.78 0-1.28.47-2.32 1.24-3.14-.12-.3-.54-1.52.12-3.18 0 0 1.01-.32 3.3 1.2a11.6 11.6 0 0 1 6 0c2.29-1.52 3.3-1.2 3.3-1.2.66 1.66.24 2.88.12 3.18.77.82 1.23 1.86 1.23 3.14 0 4.49-2.8 5.48-5.48 5.77.43.37.81 1.1.81 2.22v3.29c0 .32.22.69.83.57A12.01 12.01 0 0 0 24 12.29C24 5.78 18.63.5 12 .5z"/></svg>
-              </a>
-            </div>
+            <div class="pc-top"><span class="pc-icon">✅</span><a class="pc-link" href="https://github.com/JaideepSingh-code/Apache-Commons-CLI-Testing" target="_blank" rel="noopener" aria-label="Apache Commons CLI testing on GitHub"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 .5C5.37.5 0 5.78 0 12.29c0 5.21 3.44 9.63 8.21 11.19.6.11.82-.25.82-.57v-2.2c-3.34.71-4.04-1.58-4.04-1.58-.55-1.36-1.34-1.73-1.34-1.73-1.09-.73.08-.72.08-.72 1.2.08 1.84 1.21 1.84 1.21 1.07 1.79 2.81 1.27 3.5.97.11-.76.42-1.27.76-1.56-2.67-.3-5.47-1.3-5.47-5.78 0-1.28.47-2.32 1.24-3.14-.12-.3-.54-1.52.12-3.18 0 0 1.01-.32 3.3 1.2a11.6 11.6 0 0 1 6 0c2.29-1.52 3.3-1.2 3.3-1.2.66 1.66.24 2.88.12 3.18.77.82 1.23 1.86 1.23 3.14 0 4.49-2.8 5.48-5.48 5.77.43.37.81 1.1.81 2.22v3.29c0 .32.22.69.83.57A12.01 12.01 0 0 0 24 12.29C24 5.78 18.63.5 12 .5z"/></svg></a></div>
             <h3>Apache Commons CLI — Testing</h3>
             <p class="pc-tagline">Open-source test hardening</p>
             <p class="pc-desc">Engineered 1,938 test methods (3,965+ assertions) across 36 classes, hitting 98% line and 95% branch coverage with build-enforced thresholds. Integrated 31 EvoSuite suites, validated across 6 JDK versions, and wired a 6-tool quality pipeline with CodeQL and OpenSSF Scorecard.</p>
-            <ul class="chips small">
-              <li>Java</li><li>JUnit</li><li>PIT</li><li>JaCoCo</li><li>EvoSuite</li><li>GitHub Actions</li>
-            </ul>
+            <ul class="chips small"><li>Java</li><li>JUnit</li><li>PIT</li><li>JaCoCo</li><li>EvoSuite</li><li>GitHub Actions</li></ul>
           </article>
 
-          <!-- Database Testing Suite -->
           <article class="project-card reveal" data-cats="testing">
-            <div class="pc-top">
-              <span class="pc-icon">🗄️</span>
-              <a class="pc-link" href="https://github.com/JaideepSingh-code/Database-Testing-Suite-Pagila" target="_blank" rel="noopener" aria-label="Database testing suite on GitHub">
-                <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 .5C5.37.5 0 5.78 0 12.29c0 5.21 3.44 9.63 8.21 11.19.6.11.82-.25.82-.57v-2.2c-3.34.71-4.04-1.58-4.04-1.58-.55-1.36-1.34-1.73-1.34-1.73-1.09-.73.08-.72.08-.72 1.2.08 1.84 1.21 1.84 1.21 1.07 1.79 2.81 1.27 3.5.97.11-.76.42-1.27.76-1.56-2.67-.3-5.47-1.3-5.47-5.78 0-1.28.47-2.32 1.24-3.14-.12-.3-.54-1.52.12-3.18 0 0 1.01-.32 3.3 1.2a11.6 11.6 0 0 1 6 0c2.29-1.52 3.3-1.2 3.3-1.2.66 1.66.24 2.88.12 3.18.77.82 1.23 1.86 1.23 3.14 0 4.49-2.8 5.48-5.48 5.77.43.37.81 1.1.81 2.22v3.29c0 .32.22.69.83.57A12.01 12.01 0 0 0 24 12.29C24 5.78 18.63.5 12 .5z"/></svg>
-              </a>
-            </div>
+            <div class="pc-top"><span class="pc-icon">🗄️</span><a class="pc-link" href="https://github.com/JaideepSingh-code/Database-Testing-Suite-Pagila" target="_blank" rel="noopener" aria-label="Database testing suite on GitHub"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 .5C5.37.5 0 5.78 0 12.29c0 5.21 3.44 9.63 8.21 11.19.6.11.82-.25.82-.57v-2.2c-3.34.71-4.04-1.58-4.04-1.58-.55-1.36-1.34-1.73-1.34-1.73-1.09-.73.08-.72.08-.72 1.2.08 1.84 1.21 1.84 1.21 1.07 1.79 2.81 1.27 3.5.97.11-.76.42-1.27.76-1.56-2.67-.3-5.47-1.3-5.47-5.78 0-1.28.47-2.32 1.24-3.14-.12-.3-.54-1.52.12-3.18 0 0 1.01-.32 3.3 1.2a11.6 11.6 0 0 1 6 0c2.29-1.52 3.3-1.2 3.3-1.2.66 1.66.24 2.88.12 3.18.77.82 1.23 1.86 1.23 3.14 0 4.49-2.8 5.48-5.48 5.77.43.37.81 1.1.81 2.22v3.29c0 .32.22.69.83.57A12.01 12.01 0 0 0 24 12.29C24 5.78 18.63.5 12 .5z"/></svg></a></div>
             <h3>Database Testing Suite — Pagila</h3>
             <p class="pc-tagline">767-assertion PostgreSQL test bed</p>
             <p class="pc-desc">Evaluated 10 frameworks, chose pgTAP + pg_prove, and wrote 6,864 lines of test SQL across 90 files with 767 assertions at a 100% pass rate. Validated 46+ DB objects, then extended to 508 AI-assisted cases with 42 reusable helper functions covering business rules, regressions, and edge cases.</p>
-            <ul class="chips small">
-              <li>PostgreSQL</li><li>pgTAP</li><li>pg_prove</li><li>SQL</li>
-            </ul>
+            <ul class="chips small"><li>PostgreSQL</li><li>pgTAP</li><li>pg_prove</li><li>SQL</li></ul>
           </article>
 
-          <!-- VGA Controller -->
           <article class="project-card reveal" data-cats="hardware">
-            <div class="pc-top">
-              <span class="pc-icon">🎛️</span>
-              <a class="pc-link" href="https://github.com/JaideepSingh-code/VGA-Graphics-Controller-FPGA" target="_blank" rel="noopener" aria-label="VGA controller on GitHub">
-                <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 .5C5.37.5 0 5.78 0 12.29c0 5.21 3.44 9.63 8.21 11.19.6.11.82-.25.82-.57v-2.2c-3.34.71-4.04-1.58-4.04-1.58-.55-1.36-1.34-1.73-1.34-1.73-1.09-.73.08-.72.08-.72 1.2.08 1.84 1.21 1.84 1.21 1.07 1.79 2.81 1.27 3.5.97.11-.76.42-1.27.76-1.56-2.67-.3-5.47-1.3-5.47-5.78 0-1.28.47-2.32 1.24-3.14-.12-.3-.54-1.52.12-3.18 0 0 1.01-.32 3.3 1.2a11.6 11.6 0 0 1 6 0c2.29-1.52 3.3-1.2 3.3-1.2.66 1.66.24 2.88.12 3.18.77.82 1.23 1.86 1.23 3.14 0 4.49-2.8 5.48-5.48 5.77.43.37.81 1.1.81 2.22v3.29c0 .32.22.69.83.57A12.01 12.01 0 0 0 24 12.29C24 5.78 18.63.5 12 .5z"/></svg>
-              </a>
-            </div>
+            <div class="pc-top"><span class="pc-icon">🎛️</span><a class="pc-link" href="https://github.com/JaideepSingh-code/VGA-Graphics-Controller-FPGA" target="_blank" rel="noopener" aria-label="VGA controller on GitHub"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 .5C5.37.5 0 5.78 0 12.29c0 5.21 3.44 9.63 8.21 11.19.6.11.82-.25.82-.57v-2.2c-3.34.71-4.04-1.58-4.04-1.58-.55-1.36-1.34-1.73-1.34-1.73-1.09-.73.08-.72.08-.72 1.2.08 1.84 1.21 1.84 1.21 1.07 1.79 2.81 1.27 3.5.97.11-.76.42-1.27.76-1.56-2.67-.3-5.47-1.3-5.47-5.78 0-1.28.47-2.32 1.24-3.14-.12-.3-.54-1.52.12-3.18 0 0 1.01-.32 3.3 1.2a11.6 11.6 0 0 1 6 0c2.29-1.52 3.3-1.2 3.3-1.2.66 1.66.24 2.88.12 3.18.77.82 1.23 1.86 1.23 3.14 0 4.49-2.8 5.48-5.48 5.77.43.37.81 1.1.81 2.22v3.29c0 .32.22.69.83.57A12.01 12.01 0 0 0 24 12.29C24 5.78 18.63.5 12 .5z"/></svg></a></div>
             <h3>Accelerometer → VGA Controller</h3>
             <p class="pc-tagline">Real-time graphics, pure hardware</p>
             <p class="pc-desc">An 11-module real-time visualization on Intel MAX10 FPGA bridging an ADXL345 accelerometer to a 640×480 @ 60 Hz VGA display — no soft-core processor. Custom SPI master + FSM in SystemVerilog, 3 clock domains via 2 PLLs with safe CDC, and a tilt-driven RGB feedback loop.</p>
-            <ul class="chips small">
-              <li>SystemVerilog</li><li>FPGA</li><li>SPI</li><li>VGA</li>
-            </ul>
+            <ul class="chips small"><li>SystemVerilog</li><li>FPGA</li><li>SPI</li><li>VGA</li></ul>
           </article>
 
-          <!-- Morse Code -->
           <article class="project-card reveal" data-cats="hardware">
-            <div class="pc-top">
-              <span class="pc-icon">📡</span>
-              <a class="pc-link" href="https://github.com/JaideepSingh-code/Morse-Code-FPGA" target="_blank" rel="noopener" aria-label="Morse code FPGA on GitHub">
-                <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 .5C5.37.5 0 5.78 0 12.29c0 5.21 3.44 9.63 8.21 11.19.6.11.82-.25.82-.57v-2.2c-3.34.71-4.04-1.58-4.04-1.58-.55-1.36-1.34-1.73-1.34-1.73-1.09-.73.08-.72.08-.72 1.2.08 1.84 1.21 1.84 1.21 1.07 1.79 2.81 1.27 3.5.97.11-.76.42-1.27.76-1.56-2.67-.3-5.47-1.3-5.47-5.78 0-1.28.47-2.32 1.24-3.14-.12-.3-.54-1.52.12-3.18 0 0 1.01-.32 3.3 1.2a11.6 11.6 0 0 1 6 0c2.29-1.52 3.3-1.2 3.3-1.2.66 1.66.24 2.88.12 3.18.77.82 1.23 1.86 1.23 3.14 0 4.49-2.8 5.48-5.48 5.77.43.37.81 1.1.81 2.22v3.29c0 .32.22.69.83.57A12.01 12.01 0 0 0 24 12.29C24 5.78 18.63.5 12 .5z"/></svg>
-              </a>
-            </div>
+            <div class="pc-top"><span class="pc-icon">📡</span><a class="pc-link" href="https://github.com/JaideepSingh-code/Morse-Code-FPGA" target="_blank" rel="noopener" aria-label="Morse code FPGA on GitHub"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 .5C5.37.5 0 5.78 0 12.29c0 5.21 3.44 9.63 8.21 11.19.6.11.82-.25.82-.57v-2.2c-3.34.71-4.04-1.58-4.04-1.58-.55-1.36-1.34-1.73-1.34-1.73-1.09-.73.08-.72.08-.72 1.2.08 1.84 1.21 1.84 1.21 1.07 1.79 2.81 1.27 3.5.97.11-.76.42-1.27.76-1.56-2.67-.3-5.47-1.3-5.47-5.78 0-1.28.47-2.32 1.24-3.14-.12-.3-.54-1.52.12-3.18 0 0 1.01-.32 3.3 1.2a11.6 11.6 0 0 1 6 0c2.29-1.52 3.3-1.2 3.3-1.2.66 1.66.24 2.88.12 3.18.77.82 1.23 1.86 1.23 3.14 0 4.49-2.8 5.48-5.48 5.77.43.37.81 1.1.81 2.22v3.29c0 .32.22.69.83.57A12.01 12.01 0 0 0 24 12.29C24 5.78 18.63.5 12 .5z"/></svg></a></div>
             <h3>Morse Code Display System</h3>
             <p class="pc-tagline">FSM-driven multi-output translator</p>
             <p class="pc-desc">A 4-module FPGA Morse translator for all 26 letters with 3 simultaneous outputs: 7-segment, LED blinks, and mechanical relay clicks. 5-state Moore FSM for dot/dash timing and a 25-bit clock divider, driving an external transistor amp circuit — verified in ModelSim.</p>
-            <ul class="chips small">
-              <li>Verilog</li><li>DE10-Lite</li><li>FSM</li><li>ModelSim</li>
-            </ul>
+            <ul class="chips small"><li>Verilog</li><li>DE10-Lite</li><li>FSM</li><li>ModelSim</li></ul>
           </article>
 
-          <!-- Computer Security -->
           <article class="project-card reveal" data-cats="security">
-            <div class="pc-top">
-              <span class="pc-icon">🔐</span>
-              <a class="pc-link" href="https://github.com/JaideepSingh-code/Computer-Security" target="_blank" rel="noopener" aria-label="Computer security on GitHub">
-                <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 .5C5.37.5 0 5.78 0 12.29c0 5.21 3.44 9.63 8.21 11.19.6.11.82-.25.82-.57v-2.2c-3.34.71-4.04-1.58-4.04-1.58-.55-1.36-1.34-1.73-1.34-1.73-1.09-.73.08-.72.08-.72 1.2.08 1.84 1.21 1.84 1.21 1.07 1.79 2.81 1.27 3.5.97.11-.76.42-1.27.76-1.56-2.67-.3-5.47-1.3-5.47-5.78 0-1.28.47-2.32 1.24-3.14-.12-.3-.54-1.52.12-3.18 0 0 1.01-.32 3.3 1.2a11.6 11.6 0 0 1 6 0c2.29-1.52 3.3-1.2 3.3-1.2.66 1.66.24 2.88.12 3.18.77.82 1.23 1.86 1.23 3.14 0 4.49-2.8 5.48-5.48 5.77.43.37.81 1.1.81 2.22v3.29c0 .32.22.69.83.57A12.01 12.01 0 0 0 24 12.29C24 5.78 18.63.5 12 .5z"/></svg>
-              </a>
-            </div>
+            <div class="pc-top"><span class="pc-icon">🔐</span><a class="pc-link" href="https://github.com/JaideepSingh-code/Computer-Security" target="_blank" rel="noopener" aria-label="Computer security on GitHub"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 .5C5.37.5 0 5.78 0 12.29c0 5.21 3.44 9.63 8.21 11.19.6.11.82-.25.82-.57v-2.2c-3.34.71-4.04-1.58-4.04-1.58-.55-1.36-1.34-1.73-1.34-1.73-1.09-.73.08-.72.08-.72 1.2.08 1.84 1.21 1.84 1.21 1.07 1.79 2.81 1.27 3.5.97.11-.76.42-1.27.76-1.56-2.67-.3-5.47-1.3-5.47-5.78 0-1.28.47-2.32 1.24-3.14-.12-.3-.54-1.52.12-3.18 0 0 1.01-.32 3.3 1.2a11.6 11.6 0 0 1 6 0c2.29-1.52 3.3-1.2 3.3-1.2.66 1.66.24 2.88.12 3.18.77.82 1.23 1.86 1.23 3.14 0 4.49-2.8 5.48-5.48 5.77.43.37.81 1.1.81 2.22v3.29c0 .32.22.69.83.57A12.01 12.01 0 0 0 24 12.29C24 5.78 18.63.5 12 .5z"/></svg></a></div>
             <h3>Computer Security Lab Portfolio</h3>
             <p class="pc-tagline">Offensive &amp; defensive security</p>
             <p class="pc-desc">6 hands-on labs with 18+ tools: static malware analysis on AgentTesla with custom YARA rules, exploiting 3 CVEs (ProFTPD, UnrealIRCd, Slowloris) with reverse shells on Metasploitable3, AES-256/RSA-2048 with OpenSSL, password cracking with John + Hydra, and a Snort IDS deployment.</p>
-            <ul class="chips small">
-              <li>OpenSSL</li><li>YARA</li><li>Snort</li><li>Kali Linux</li><li>Python</li>
-            </ul>
+            <ul class="chips small"><li>OpenSSL</li><li>YARA</li><li>Snort</li><li>Kali Linux</li><li>Python</li></ul>
           </article>
 
-          <!-- Smart Health Formal Verification -->
           <article class="project-card reveal" data-cats="research ai">
-            <div class="pc-top">
-              <span class="pc-icon">🩺</span>
-              <a class="pc-link" href="https://github.com/JaideepSingh-code/Smart-Health-Formal-Verification" target="_blank" rel="noopener" aria-label="Smart Health verification on GitHub">
-                <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 .5C5.37.5 0 5.78 0 12.29c0 5.21 3.44 9.63 8.21 11.19.6.11.82-.25.82-.57v-2.2c-3.34.71-4.04-1.58-4.04-1.58-.55-1.36-1.34-1.73-1.34-1.73-1.09-.73.08-.72.08-.72 1.2.08 1.84 1.21 1.84 1.21 1.07 1.79 2.81 1.27 3.5.97.11-.76.42-1.27.76-1.56-2.67-.3-5.47-1.3-5.47-5.78 0-1.28.47-2.32 1.24-3.14-.12-.3-.54-1.52.12-3.18 0 0 1.01-.32 3.3 1.2a11.6 11.6 0 0 1 6 0c2.29-1.52 3.3-1.2 3.3-1.2.66 1.66.24 2.88.12 3.18.77.82 1.23 1.86 1.23 3.14 0 4.49-2.8 5.48-5.48 5.77.43.37.81 1.1.81 2.22v3.29c0 .32.22.69.83.57A12.01 12.01 0 0 0 24 12.29C24 5.78 18.63.5 12 .5z"/></svg>
-              </a>
-            </div>
+            <div class="pc-top"><span class="pc-icon">🩺</span><a class="pc-link" href="https://github.com/JaideepSingh-code/Smart-Health-Formal-Verification" target="_blank" rel="noopener" aria-label="Smart Health verification on GitHub"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 .5C5.37.5 0 5.78 0 12.29c0 5.21 3.44 9.63 8.21 11.19.6.11.82-.25.82-.57v-2.2c-3.34.71-4.04-1.58-4.04-1.58-.55-1.36-1.34-1.73-1.34-1.73-1.09-.73.08-.72.08-.72 1.2.08 1.84 1.21 1.84 1.21 1.07 1.79 2.81 1.27 3.5.97.11-.76.42-1.27.76-1.56-2.67-.3-5.47-1.3-5.47-5.78 0-1.28.47-2.32 1.24-3.14-.12-.3-.54-1.52.12-3.18 0 0 1.01-.32 3.3 1.2a11.6 11.6 0 0 1 6 0c2.29-1.52 3.3-1.2 3.3-1.2.66 1.66.24 2.88.12 3.18.77.82 1.23 1.86 1.23 3.14 0 4.49-2.8 5.48-5.48 5.77.43.37.81 1.1.81 2.22v3.29c0 .32.22.69.83.57A12.01 12.01 0 0 0 24 12.29C24 5.78 18.63.5 12 .5z"/></svg></a></div>
             <h3>Smart Health — Requirements Verification</h3>
             <p class="pc-tagline">NLP extraction + formal model checking</p>
             <p class="pc-desc">Extracted 15 functional and 9 non-functional requirements with spaCy + GPT, then formally verified 25 LTL properties across 3 concurrent process models in the SPIN model checker — 21 passed and 4 revealed genuine concurrency bugs. HIPAA/GDPR-aware across 5 subsystems.</p>
-            <ul class="chips small">
-              <li>NLP / spaCy</li><li>GPT</li><li>SPIN</li><li>Promela</li><li>LTL</li>
-            </ul>
+            <ul class="chips small"><li>NLP / spaCy</li><li>GPT</li><li>SPIN</li><li>Promela</li><li>LTL</li></ul>
           </article>
 
-          <!-- Web Architecture Research -->
           <article class="project-card reveal" data-cats="research">
-            <div class="pc-top">
-              <span class="pc-icon">📐</span>
-              <a class="pc-link" href="https://github.com/JaideepSingh-code/Web-Architecture-Research" target="_blank" rel="noopener" aria-label="Web architecture research on GitHub">
-                <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 .5C5.37.5 0 5.78 0 12.29c0 5.21 3.44 9.63 8.21 11.19.6.11.82-.25.82-.57v-2.2c-3.34.71-4.04-1.58-4.04-1.58-.55-1.36-1.34-1.73-1.34-1.73-1.09-.73.08-.72.08-.72 1.2.08 1.84 1.21 1.84 1.21 1.07 1.79 2.81 1.27 3.5.97.11-.76.42-1.27.76-1.56-2.67-.3-5.47-1.3-5.47-5.78 0-1.28.47-2.32 1.24-3.14-.12-.3-.54-1.52.12-3.18 0 0 1.01-.32 3.3 1.2a11.6 11.6 0 0 1 6 0c2.29-1.52 3.3-1.2 3.3-1.2.66 1.66.24 2.88.12 3.18.77.82 1.23 1.86 1.23 3.14 0 4.49-2.8 5.48-5.48 5.77.43.37.81 1.1.81 2.22v3.29c0 .32.22.69.83.57A12.01 12.01 0 0 0 24 12.29C24 5.78 18.63.5 12 .5z"/></svg>
-              </a>
-            </div>
+            <div class="pc-top"><span class="pc-icon">📐</span><a class="pc-link" href="https://github.com/JaideepSingh-code/Web-Architecture-Research" target="_blank" rel="noopener" aria-label="Web architecture research on GitHub"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 .5C5.37.5 0 5.78 0 12.29c0 5.21 3.44 9.63 8.21 11.19.6.11.82-.25.82-.57v-2.2c-3.34.71-4.04-1.58-4.04-1.58-.55-1.36-1.34-1.73-1.34-1.73-1.09-.73.08-.72.08-.72 1.2.08 1.84 1.21 1.84 1.21 1.07 1.79 2.81 1.27 3.5.97.11-.76.42-1.27.76-1.56-2.67-.3-5.47-1.3-5.47-5.78 0-1.28.47-2.32 1.24-3.14-.12-.3-.54-1.52.12-3.18 0 0 1.01-.32 3.3 1.2a11.6 11.6 0 0 1 6 0c2.29-1.52 3.3-1.2 3.3-1.2.66 1.66.24 2.88.12 3.18.77.82 1.23 1.86 1.23 3.14 0 4.49-2.8 5.48-5.48 5.77.43.37.81 1.1.81 2.22v3.29c0 .32.22.69.83.57A12.01 12.01 0 0 0 24 12.29C24 5.78 18.63.5 12 .5z"/></svg></a></div>
             <h3>Web Architecture Scalability Research</h3>
             <p class="pc-tagline">MVC · Event Sourcing · Microservices</p>
             <p class="pc-desc">A 5-page paper (9 academic references) evaluating MVC, Event Sourcing (Kafka, CQRS), and Microservices across scalability, testability, consistency, and parallel development — with Netflix, Amazon, and Guardian case studies. Proposes a novel combined architecture integrating all three.</p>
-            <ul class="chips small">
-              <li>MVC</li><li>Event Sourcing</li><li>Microservices</li><li>CQRS</li>
-            </ul>
+            <ul class="chips small"><li>MVC</li><li>Event Sourcing</li><li>Microservices</li><li>CQRS</li></ul>
           </article>
-
         </div>
       </div>
     </section>
@@ -486,21 +379,21 @@
         </div>
         <div class="lead-grid">
           <div class="lead-card reveal">
-            <div class="lead-date">May 2026 — Present</div>
+            <div class="lead-date">2026 — Present</div>
             <h3>Committee Member</h3>
             <p class="lead-org">City of Markham · Environmental Advisory Committee</p>
             <p>Contribute a software-engineering perspective to data-driven sustainability and environmental-awareness initiatives.</p>
           </div>
           <div class="lead-card reveal">
-            <div class="lead-date">May 2026 — Present</div>
+            <div class="lead-date">2026 — Present</div>
             <h3>Mentor — Human × Tech</h3>
             <p class="lead-org">Youth Challenge International</p>
-            <p>Co-designed a challenge on AI multilingual food-waste classification for Markham's diverse population, and mentor youth teams using computer vision and Learning-from-Demonstration to train culturally-aware AI models.</p>
+            <p>Co-designed a challenge on AI multilingual food-waste classification, and mentor youth teams using computer vision and Learning-from-Demonstration to train culturally-aware AI models.</p>
           </div>
           <div class="lead-card reveal">
-            <div class="lead-date">Sep 2024 — Apr 2025</div>
+            <div class="lead-date">2024 — 2025</div>
             <h3>Team Lead — Waste Less, Feed More</h3>
-            <p class="lead-org">Markham Environmental Advisory Committee</p>
+            <p class="lead-org">Environmental Advisory Committee</p>
             <p>Led an 8-member cross-functional team to deliver a food-waste awareness campaign — an educational website, interactive eBook, and video featured by the City of Markham — aligned to UN SDGs 2, 12 &amp; 13.</p>
           </div>
         </div>
@@ -517,10 +410,10 @@
         <div class="edu-card reveal">
           <div class="edu-main">
             <h3>Bachelor of Engineering — Software Engineering <span class="edu-honor">(Specialized Honours)</span></h3>
-            <p class="edu-org">Lassonde School of Engineering, York University · Toronto, ON</p>
-            <p class="edu-note">York University International Scholarship Recipient</p>
+            <p class="edu-org">Lassonde School of Engineering, York University</p>
+            <p class="edu-note">York University Scholarship Recipient</p>
           </div>
-          <div class="edu-date">Jan 2021 — May 2026</div>
+          <div class="edu-date">2026</div>
         </div>
         <div class="edu-card reveal">
           <div class="edu-main">
@@ -537,18 +430,21 @@
       <div class="container">
         <div class="contact-inner reveal">
           <span class="section-num">07</span>
-          <h2 class="contact-title">Let's build something <span class="grad-text">together</span>.</h2>
+          <h2 class="contact-title">Let's build something <span class="accent-text">great</span>.</h2>
           <p class="contact-sub">
-            I'm open to software engineering and new-grad opportunities, and I'm always happy to talk
-            shop — testing, AI, systems, or hardware. Drop me a line.
+            I'm actively looking for software engineering roles and I'm always happy to talk shop —
+            testing, AI, systems, or security. The fastest way to learn about me? Ask my AI, or just email me.
           </p>
-          <a href="mailto:jaideep.engineer@gmail.com" class="btn btn-primary btn-lg">jaideep.engineer@gmail.com</a>
+          <div class="contact-cta">
+            <a href="mailto:jaideep.engineer@gmail.com" class="btn btn-primary btn-lg">jaideep.engineer@gmail.com</a>
+            <button class="btn btn-outline btn-lg" id="contactAsk">✦ Ask my AI assistant</button>
+          </div>
           <div class="contact-links">
             <a href="https://github.com/JaideepSingh-code" target="_blank" rel="noopener">GitHub ↗</a>
-            <a href="https://www.linkedin.com/in/jaideep-singh-163585237/" target="_blank" rel="noopener" data-needs-url="linkedin">LinkedIn ↗</a>
+            <a href="https://www.linkedin.com/in/jaideep-singh-163585237/" target="_blank" rel="noopener">LinkedIn ↗</a>
             <a href="assets/Jaideep-Singh-Resume.pdf" target="_blank" rel="noopener">Résumé ↗</a>
           </div>
-          <p class="contact-loc">📍 Toronto, ON, Canada</p>
+          <p class="contact-loc"><span class="status-dot"></span> Available for remote &amp; on-site roles · open to relocation</p>
         </div>
       </div>
     </section>
@@ -557,11 +453,36 @@
   <footer class="footer">
     <div class="container footer-inner">
       <span>© <span id="year">2026</span> Jaideep Singh</span>
-      <span class="footer-built">Built with care · hosted on GitHub Pages</span>
+      <span class="footer-built">Built &amp; designed with care</span>
     </div>
   </footer>
 
+  <!-- AI assistant -->
+  <button class="chat-fab" id="chatFab" aria-label="Ask my AI assistant">
+    <span class="chat-fab-spark">✦</span>
+    <span class="chat-fab-text">Ask my AI</span>
+  </button>
+  <div class="chat-panel" id="chatPanel" role="dialog" aria-label="AI assistant about Jaideep" aria-hidden="true">
+    <div class="chat-head">
+      <div class="chat-id">
+        <span class="chat-avatar">JS</span>
+        <div class="chat-meta">
+          <strong>Jaideep's AI</strong>
+          <span class="chat-status"><span class="status-dot"></span> Ask me anything about Jaideep</span>
+        </div>
+      </div>
+      <button class="chat-close" id="chatClose" aria-label="Close chat">✕</button>
+    </div>
+    <div class="chat-log" id="chatLog"></div>
+    <div class="chat-suggest" id="chatSuggest"></div>
+    <form class="chat-input" id="chatForm" autocomplete="off">
+      <input id="chatText" type="text" placeholder="Ask me anything about Jaideep…" aria-label="Your question" />
+      <button type="submit" aria-label="Send message">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M3.4 20.4 21 12 3.4 3.6 3.39 10l12 2-12 2z"/></svg>
+      </button>
+    </form>
+  </div>
+
   <script src="script.js"></script>
-  <script type="module" src="hero3d.js"></script>
 </body>
 </html>
