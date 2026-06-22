@@ -87,9 +87,9 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.m
     core.position.y = wide ? 0.2 : (small ? 2.4 : 1.6);
     var s = small ? 0.7 : 1;
     core.scale.setScalar(s);
-    edges.material.opacity = small ? 0.16 : 0.22;
-    nodes.material.opacity = small ? 0.4 : 0.55;
-    field.material.opacity = small ? 0.32 : 0.45;
+    edges.material.opacity = small ? 0.2 : 0.32;
+    nodes.material.opacity = small ? 0.5 : 0.72;
+    field.material.opacity = small ? 0.38 : 0.55;
   }
   resize();
   window.addEventListener('resize', resize);

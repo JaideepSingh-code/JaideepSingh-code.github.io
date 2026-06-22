@@ -79,6 +79,31 @@
     });
   });
 
+  /* ---- Project cards → detail page ---- */
+  var REPO2SLUG = {};
+  if (window.PROJECTS) Object.keys(window.PROJECTS).forEach(function (s) {
+    REPO2SLUG[(window.PROJECTS[s].repo || '').toLowerCase()] = s;
+  });
+  cards.forEach(function (card) {
+    var link = card.querySelector('.pc-link');
+    var repo = link ? (link.getAttribute('href') || '').toLowerCase() : '';
+    var slug = REPO2SLUG[repo];
+    if (!slug) return;
+    card.classList.add('clickable');
+    card.setAttribute('tabindex', '0');
+    card.setAttribute('role', 'link');
+    card.setAttribute('aria-label', card.querySelector('h3') ? card.querySelector('h3').textContent + ' — view details' : 'View project details');
+    if (!card.querySelector('.pc-more')) {
+      var hint = document.createElement('span');
+      hint.className = 'pc-more';
+      hint.innerHTML = 'View details <span>→</span>';
+      card.appendChild(hint);
+    }
+    var open = function () { window.location.href = 'project.html?p=' + slug; };
+    card.addEventListener('click', function (e) { if (e.target.closest('.pc-link')) return; open(); });
+    card.addEventListener('keydown', function (e) { if (e.key === 'Enter') open(); });
+  });
+
   /* ---- Scroll progress ---- */
   var progress = document.getElementById('scrollProgress');
   if (progress) {

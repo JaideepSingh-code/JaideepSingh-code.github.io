@@ -205,6 +205,11 @@ body::before {
 .project-card h3 { font-family: var(--font-display); font-size: 1.16rem; margin-bottom: 4px; }
 .pc-tagline { font-size: .85rem; color: var(--accent); margin-bottom: 13px; font-family: var(--font-mono); }
 .pc-desc { font-size: .92rem; color: var(--muted); margin-bottom: 18px; flex-grow: 1; }
+.project-card.clickable { cursor: pointer; }
+.project-card:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.pc-more { display: inline-flex; align-items: center; gap: 6px; margin-top: 16px; font-family: var(--font-mono); font-size: .8rem; font-weight: 600; color: var(--accent); }
+.pc-more span { transition: transform .2s; }
+.project-card.clickable:hover .pc-more span { transform: translateX(5px); }
 
 /* ---------- Leadership ---------- */
 .lead-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 18px; }
