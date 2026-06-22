@@ -87,12 +87,23 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.m
     core.position.y = wide ? 0.2 : (small ? 2.4 : 1.6);
     var s = small ? 0.7 : 1;
     core.scale.setScalar(s);
-    edges.material.opacity = small ? 0.2 : 0.32;
-    nodes.material.opacity = small ? 0.5 : 0.72;
-    field.material.opacity = small ? 0.38 : 0.55;
+    applyTheme();
+  }
+  function applyTheme() {
+    var dark = document.documentElement.getAttribute('data-theme') === 'dark';
+    scene.fog.color.setHex(dark ? 0x0b0c11 : 0xf4f3ee);
+    var lineCol = dark ? 0x818cf8 : 0x4f46e5;
+    edges.material.color.setHex(lineCol);
+    nodes.material.color.setHex(lineCol);
+    var sm = (canvas.clientWidth || window.innerWidth) < 640;
+    edges.material.opacity = dark ? (sm ? 0.3 : 0.42) : (sm ? 0.2 : 0.32);
+    nodes.material.opacity = dark ? (sm ? 0.62 : 0.85) : (sm ? 0.5 : 0.72);
+    field.material.opacity = dark ? (sm ? 0.5 : 0.7) : (sm ? 0.38 : 0.55);
+    if (reduced) renderer.render(scene, camera);
   }
   resize();
   window.addEventListener('resize', resize);
+  window.addEventListener('themechange', applyTheme);
 
   // --- Mouse parallax ---
   var target = { x: 0, y: 0 }, cur = { x: 0, y: 0 };

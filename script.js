@@ -141,6 +141,65 @@
   var y = document.getElementById('year');
   if (y) y.textContent = new Date().getFullYear();
 
+  /* ---- Theme toggle ---- */
+  (function () {
+    var navInner = document.querySelector('.nav-inner');
+    if (!navInner) return;
+    var btn = document.createElement('button');
+    btn.className = 'theme-toggle';
+    btn.id = 'themeToggle';
+    btn.setAttribute('aria-label', 'Toggle dark mode');
+    btn.innerHTML =
+      '<svg class="ic-moon" viewBox="0 0 24 24" fill="currentColor"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>' +
+      '<svg class="ic-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>';
+    var navToggleBtn = document.getElementById('navToggle');
+    navInner.insertBefore(btn, navToggleBtn);
+    btn.addEventListener('click', function () {
+      var next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', next);
+      try { localStorage.setItem('theme', next); } catch (e) {}
+      window.dispatchEvent(new CustomEvent('themechange', { detail: next }));
+    });
+  })();
+
+  /* ---- Count-up (hero quick-facts stats) ---- */
+  (function () {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    document.querySelectorAll('.hc-stats b').forEach(function (el) {
+      var m = /^([\d.]+)(.*)$/.exec(el.textContent.trim());
+      if (!m) return;
+      var target = parseFloat(m[1]), suffix = m[2], dec = m[1].indexOf('.') !== -1 ? 1 : 0;
+      var start = null;
+      function step(ts) {
+        if (!start) start = ts;
+        var p = Math.min((ts - start) / 1100, 1);
+        var v = (1 - Math.pow(1 - p, 3)) * target;
+        el.textContent = v.toFixed(dec) + (p === 1 ? suffix : '');
+        if (p < 1) requestAnimationFrame(step); else el.textContent = target.toFixed(dec) + suffix;
+      }
+      requestAnimationFrame(step);
+    });
+  })();
+
+  /* ---- Smooth page transitions on internal navigation ---- */
+  (function () {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    document.addEventListener('click', function (e) {
+      var a = e.target.closest('a');
+      if (!a) return;
+      var href = a.getAttribute('href') || '';
+      if (a.target === '_blank' || a.hasAttribute('download')) return;
+      if (!href || href.charAt(0) === '#' || href.indexOf('mailto:') === 0) return;
+      var url;
+      try { url = new URL(a.href, location.href); } catch (e2) { return; }
+      if (url.origin !== location.origin) return;
+      if (url.pathname === location.pathname && url.search === location.search) return;
+      e.preventDefault();
+      document.body.classList.add('page-leave');
+      setTimeout(function () { location.href = a.href; }, 240);
+    });
+  })();
+
   /* ========================================================
      AI assistant — client-side, knowledge-base driven.
      Grounded in real achievements, tuned to present Jaideep
