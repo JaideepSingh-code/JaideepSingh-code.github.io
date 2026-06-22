@@ -1,0 +1,51 @@
+/* ============================================================
+   Blog index + article styles (built on styles.css variables).
+   ============================================================ */
+
+/* ---- Blog index ---- */
+.blog-hero { padding: 150px 0 30px; }
+.blog-hero h1 { font-family: var(--font-display); font-size: clamp(2.4rem, 6vw, 3.6rem); font-weight: 600; letter-spacing: -.02em; margin-bottom: 14px; }
+.blog-hero p { color: var(--muted); font-size: 1.1rem; max-width: 560px; }
+
+.post-list { display: grid; gap: 16px; padding-bottom: 40px; }
+.post-card { display: block; background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 28px 30px; transition: transform .25s, box-shadow .25s, border-color .25s; box-shadow: var(--shadow-sm); }
+.post-card:hover { transform: translateY(-4px); border-color: var(--accent-line); box-shadow: var(--shadow-md); }
+.post-meta { display: flex; gap: 12px; align-items: center; font-family: var(--font-mono); font-size: .76rem; color: var(--faint); margin-bottom: 12px; }
+.post-meta .tag { color: #fff; background: linear-gradient(120deg, var(--accent), var(--accent-2)); padding: 3px 10px; border-radius: 999px; }
+.post-card h2 { font-family: var(--font-display); font-size: 1.55rem; line-height: 1.2; margin-bottom: 10px; color: var(--ink); }
+.post-card p { color: var(--muted); font-size: 1rem; margin-bottom: 14px; }
+.post-card .read { font-family: var(--font-mono); font-size: .85rem; color: var(--accent); display: inline-flex; align-items: center; gap: 6px; }
+.post-card .read span { transition: transform .2s; }
+.post-card:hover .read span { transform: translateX(5px); }
+
+/* ---- Article ---- */
+.article { max-width: 760px; margin: 0 auto; padding: 150px 0 30px; }
+.article-back { font-family: var(--font-mono); font-size: .82rem; color: var(--muted); display: inline-block; margin-bottom: 26px; transition: color .2s; }
+.article-back:hover { color: var(--ink); }
+.article-cat { display: inline-block; font-family: var(--font-mono); font-size: .74rem; text-transform: uppercase; letter-spacing: .05em; color: #fff; background: linear-gradient(120deg, var(--accent), var(--accent-2)); padding: 6px 13px; border-radius: 999px; margin-bottom: 18px; }
+.article h1 { font-family: var(--font-display); font-size: clamp(2rem, 5vw, 3rem); font-weight: 600; letter-spacing: -.02em; line-height: 1.1; margin-bottom: 20px; }
+.byline { display: flex; align-items: center; gap: 12px; padding-bottom: 26px; margin-bottom: 30px; border-bottom: 1px solid var(--line); }
+.byline .av { width: 44px; height: 44px; border-radius: 12px; background: linear-gradient(135deg, var(--accent), var(--accent-2)); color: #fff; font-family: var(--font-display); font-weight: 600; display: grid; place-items: center; }
+.byline b { display: block; font-size: .95rem; }
+.byline span { font-size: .82rem; color: var(--muted); font-family: var(--font-mono); }
+
+.article-body { font-size: 1.12rem; line-height: 1.78; color: var(--ink-soft); }
+.article-body h2 { font-family: var(--font-display); font-size: 1.6rem; color: var(--ink); margin: 38px 0 14px; letter-spacing: -.01em; }
+.article-body p { margin-bottom: 20px; }
+.article-body ul { margin: 0 0 20px; padding-left: 4px; list-style: none; display: flex; flex-direction: column; gap: 10px; }
+.article-body li { position: relative; padding-left: 26px; }
+.article-body li::before { content: '▹'; position: absolute; left: 0; color: var(--accent); }
+.article-body strong { color: var(--ink); }
+.article-body a { color: var(--accent); text-decoration: underline; text-underline-offset: 3px; }
+.pull { background: var(--card); border: 1px solid var(--line); border-left: 4px solid var(--accent); border-radius: 12px; padding: 18px 22px; margin: 26px 0; font-family: var(--font-display); font-size: 1.2rem; color: var(--ink); box-shadow: var(--shadow-sm); }
+.metric-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 14px; margin: 26px 0; }
+.metric-row div { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 16px; text-align: center; box-shadow: var(--shadow-sm); }
+.metric-row b { display: block; font-family: var(--font-display); font-size: 1.7rem; background: linear-gradient(120deg, var(--accent), var(--accent-2)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+.metric-row span { font-size: .76rem; color: var(--muted); }
+
+.article-foot { margin-top: 40px; padding-top: 28px; border-top: 1px solid var(--line); display: flex; gap: 12px; flex-wrap: wrap; }
+
+@media (max-width: 560px) {
+  .article { padding-top: 120px; }
+  .article-body { font-size: 1.05rem; }
+}

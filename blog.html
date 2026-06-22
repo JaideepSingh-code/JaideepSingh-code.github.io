@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Writing — Jaideep Singh</title>
+  <meta name="description" content="Writing by Jaideep Singh — software engineer. Notes on testing & QA, AI/ML, and FPGA hardware, drawn from real projects." />
+  <meta name="robots" content="index, follow, max-image-preview:large" />
+  <link rel="canonical" href="https://jaideepsingh.dev/blog.html" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Writing — Jaideep Singh" />
+  <meta property="og:description" content="Notes on testing & QA, AI/ML, and FPGA hardware from a software engineer." />
+  <meta property="og:url" content="https://jaideepsingh.dev/blog.html" />
+  <meta property="og:image" content="https://jaideepsingh.dev/assets/og-image.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="blog.css" />
+  <script>document.documentElement.classList.add('js');</script>
+</head>
+<body>
+  <div class="scroll-progress" id="scrollProgress" aria-hidden="true"></div>
+  <header class="nav scrolled" id="nav">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-logo" aria-label="Home"><span class="logo-mark">JS</span><span class="logo-text">Jaideep Singh</span></a>
+      <nav class="nav-links" aria-label="Primary">
+        <a href="index.html#projects">Projects</a>
+        <a href="index.html#about">About</a>
+        <a href="blog.html" class="active">Writing</a>
+        <a href="index.html#contact">Contact</a>
+      </nav>
+      <div class="nav-actions">
+        <button class="btn btn-soft nav-ask" id="navAsk">✦ Ask my AI</button>
+        <a href="index.html#contact" class="btn btn-primary nav-contact">Get in touch</a>
+      </div>
+      <button class="nav-toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false"><span></span><span></span><span></span></button>
+    </div>
+    <div class="nav-mobile" id="navMobile">
+      <a href="index.html#projects">Projects</a>
+      <a href="index.html#about">About</a>
+      <a href="blog.html">Writing</a>
+      <a href="index.html#contact">Contact</a>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="blog-hero">
+      <div class="container">
+        <h1 class="reveal in">Writing</h1>
+        <p class="reveal in">Notes from the work — testing &amp; QA, applied AI, and hardware, drawn from real projects I've built.</p>
+      </div>
+    </section>
+
+    <section class="section" style="padding-top:24px">
+      <div class="container">
+        <div class="post-list">
+          <a class="post-card reveal" href="blog/testing-apache-commons-cli.html">
+            <div class="post-meta"><span class="tag">Testing &amp; QA</span><span>Jun 10, 2026</span><span>· 5 min read</span></div>
+            <h2>Engineering 1,938 tests: hardening Apache Commons CLI to 98% coverage</h2>
+            <p>What it actually takes to make an open-source library bulletproof — mutation testing, build-enforced coverage gates, and a six-tool CI pipeline across six JDK versions.</p>
+            <span class="read">Read article <span>→</span></span>
+          </a>
+          <a class="post-card reveal" href="blog/fine-tuning-llama-lora-salonai.html">
+            <div class="post-meta"><span class="tag">AI / ML</span><span>Jun 5, 2026</span><span>· 6 min read</span></div>
+            <h2>Fine-tuning LLaMA with LoRA for a real product</h2>
+            <p>How I trained and served a LLaMA model for SalonAI — why fine-tuning beat prompting here, running LoRA on 2× V100s, and shipping the model as a microservice.</p>
+            <span class="read">Read article <span>→</span></span>
+          </a>
+          <a class="post-card reveal" href="blog/accelerometer-vga-fpga.html">
+            <div class="post-meta"><span class="tag">Hardware / FPGA</span><span>May 25, 2026</span><span>· 5 min read</span></div>
+            <h2>Driving a VGA display from an accelerometer — entirely in hardware</h2>
+            <p>No CPU, no soft-core — just RTL. Building a real-time accelerometer-to-VGA pipeline on an FPGA with a custom SPI master, three clock domains, and careful clock-domain crossing.</p>
+            <span class="read">Read article <span>→</span></span>
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <span>© <span id="year">2026</span> Jaideep Singh</span>
+      <span class="footer-built">Built &amp; designed with care</span>
+    </div>
+  </footer>
+
+  <button class="chat-fab" id="chatFab" aria-label="Ask my AI assistant"><span class="chat-fab-spark">✦</span><span class="chat-fab-text">Ask my AI</span></button>
+  <div class="chat-panel" id="chatPanel" role="dialog" aria-label="AI assistant about Jaideep" aria-hidden="true">
+    <div class="chat-head">
+      <div class="chat-id"><span class="chat-avatar">JS</span><div class="chat-meta"><strong>Jaideep's AI</strong><span class="chat-status"><span class="status-dot"></span> Ask me anything about Jaideep</span></div></div>
+      <button class="chat-close" id="chatClose" aria-label="Close chat">✕</button>
+    </div>
+    <div class="chat-log" id="chatLog"></div>
+    <div class="chat-suggest" id="chatSuggest"></div>
+    <form class="chat-input" id="chatForm" autocomplete="off">
+      <input id="chatText" type="text" placeholder="Ask me anything about Jaideep…" aria-label="Your question" />
+      <button type="submit" aria-label="Send message"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M3.4 20.4 21 12 3.4 3.6 3.39 10l12 2-12 2z"/></svg></button>
+    </form>
+  </div>
+
+  <script>window.JAIDEEP_BOT_ENDPOINT = 'https://bot.jaideepsingh.dev';</script>
+  <script src="script.js"></script>
+</body>
+</html>

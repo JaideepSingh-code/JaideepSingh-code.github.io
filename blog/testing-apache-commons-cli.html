@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Engineering 1,938 tests: hardening Apache Commons CLI to 98% coverage — Jaideep Singh</title>
+  <meta name="description" content="Jaideep Singh on making an open-source library bulletproof: mutation testing, build-enforced coverage gates, and a six-tool CI pipeline across six JDK versions." />
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
+  <link rel="canonical" href="https://jaideepsingh.dev/blog/testing-apache-commons-cli.html" />
+  <meta property="og:type" content="article" />
+  <meta property="og:site_name" content="Jaideep Singh" />
+  <meta property="og:title" content="Engineering 1,938 tests: hardening Apache Commons CLI to 98% coverage" />
+  <meta property="og:description" content="What it takes to make an open-source library genuinely regression-proof." />
+  <meta property="og:url" content="https://jaideepsingh.dev/blog/testing-apache-commons-cli.html" />
+  <meta property="og:image" content="https://jaideepsingh.dev/assets/og-image.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../styles.css" />
+  <link rel="stylesheet" href="../blog.css" />
+  <script>document.documentElement.classList.add('js');</script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "Engineering 1,938 tests: hardening Apache Commons CLI to 98% coverage",
+    "description": "What it takes to make an open-source library genuinely regression-proof — mutation testing, coverage gates, and a six-tool CI pipeline.",
+    "datePublished": "2026-06-10",
+    "author": { "@type": "Person", "name": "Jaideep Singh", "url": "https://jaideepsingh.dev" },
+    "publisher": { "@type": "Person", "name": "Jaideep Singh" },
+    "mainEntityOfPage": "https://jaideepsingh.dev/blog/testing-apache-commons-cli.html",
+    "image": "https://jaideepsingh.dev/assets/og-image.png",
+    "keywords": "software testing, mutation testing, PIT, JaCoCo, code coverage, Apache Commons CLI, Java, QA, Jaideep Singh"
+  }
+  </script>
+</head>
+<body>
+  <div class="scroll-progress" id="scrollProgress" aria-hidden="true"></div>
+  <header class="nav scrolled" id="nav">
+    <div class="nav-inner">
+      <a href="../index.html" class="nav-logo" aria-label="Home"><span class="logo-mark">JS</span><span class="logo-text">Jaideep Singh</span></a>
+      <nav class="nav-links" aria-label="Primary">
+        <a href="../blog.html">← Writing</a>
+        <a href="../index.html#projects">Projects</a>
+        <a href="../index.html#contact">Contact</a>
+      </nav>
+      <div class="nav-actions">
+        <button class="btn btn-soft nav-ask" id="navAsk">✦ Ask my AI</button>
+        <a href="../index.html#contact" class="btn btn-primary nav-contact">Get in touch</a>
+      </div>
+      <button class="nav-toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false"><span></span><span></span><span></span></button>
+    </div>
+    <div class="nav-mobile" id="navMobile">
+      <a href="../blog.html">← Writing</a>
+      <a href="../index.html#projects">Projects</a>
+      <a href="../index.html#contact">Contact</a>
+    </div>
+  </header>
+
+  <main id="top">
+    <article class="article">
+      <a href="../blog.html" class="article-back">← All writing</a>
+      <span class="article-cat">Testing &amp; QA</span>
+      <h1>Engineering 1,938 tests: hardening Apache Commons CLI to 98% coverage</h1>
+      <div class="byline">
+        <span class="av">JS</span>
+        <div><b>Jaideep Singh</b><span>Jun 10, 2026 · 5 min read</span></div>
+      </div>
+      <div class="article-body">
+        <p>Open-source libraries are quietly load-bearing. <a href="https://commons.apache.org/proper/commons-cli/" target="_blank" rel="noopener">Apache Commons CLI</a> parses command-line arguments for countless Java tools, so a subtle regression there ripples outward to everyone who depends on it. I set out to make it genuinely <strong>regression-proof</strong> — not "has tests," but provably resistant to breakage.</p>
+
+        <h2>Coverage is a floor, not a goal</h2>
+        <p>It's easy to hit a high line-coverage number while your tests assert almost nothing — they execute code without checking the result. To measure whether the tests actually <em>catch bugs</em>, I leaned on <strong>mutation testing</strong> with PIT: it injects small faults (flip a condition, change a return) and checks whether a test fails. A surviving mutant is a hole in your suite that line coverage will never reveal.</p>
+
+        <div class="pull">Mutation score tells you if your tests would catch a real bug. Line coverage only tells you the code ran.</div>
+
+        <h2>The numbers</h2>
+        <p>I engineered <strong>1,938 test methods</strong> producing <strong>3,965+ assertions</strong> across 36 production classes, reaching 98% line/instruction and 95% branch coverage. That included 36 parameterized tests, 11 regression classes targeting known CVE-adjacent bugs, and 31 EvoSuite-generated suites — all validated across six JDK versions (8, 11, 17, 21, 25, and 26-ea) so a passing build means passing everywhere.</p>
+
+        <div class="metric-row">
+          <div><b>1,938</b><span>test methods</span></div>
+          <div><b>98%</b><span>line coverage</span></div>
+          <div><b>95%</b><span>branch coverage</span></div>
+          <div><b>6</b><span>JDK versions</span></div>
+        </div>
+
+        <h2>Make quality non-negotiable in CI</h2>
+        <p>Tests only protect you if they can't quietly erode. I wired <strong>build-enforced JaCoCo thresholds</strong> (the build fails if coverage drops below target) into a six-tool quality pipeline — JaCoCo, PIT, SpotBugs, Checkstyle, PMD, and Apache RAT — plus four GitHub Actions workflows including CodeQL security scanning and an OpenSSF Scorecard audit. Quality becomes a gate, not a hope.</p>
+
+        <h2>What I took away</h2>
+        <ul>
+          <li><strong>Mutation score &gt; coverage %.</strong> It's the honest signal of suite strength.</li>
+          <li><strong>Enforce gates in CI.</strong> If a regression can't merge, it can't ship.</li>
+          <li><strong>Test across versions.</strong> "Works on my JDK" isn't an invariant.</li>
+        </ul>
+        <p>This is the kind of rigor I bring to production code, not just open source — features that ship <em>and</em> keep working.</p>
+      </div>
+      <div class="article-foot">
+        <a class="btn btn-primary" href="https://github.com/JaideepSingh-code/Apache-Commons-CLI-Testing" target="_blank" rel="noopener">View the code on GitHub ↗</a>
+        <a class="btn btn-outline" href="../project.html?p=apache-cli">See the full case study →</a>
+      </div>
+    </article>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <span>© <span id="year">2026</span> Jaideep Singh</span>
+      <span class="footer-built">Built &amp; designed with care</span>
+    </div>
+  </footer>
+
+  <button class="chat-fab" id="chatFab" aria-label="Ask my AI assistant"><span class="chat-fab-spark">✦</span><span class="chat-fab-text">Ask my AI</span></button>
+  <div class="chat-panel" id="chatPanel" role="dialog" aria-label="AI assistant about Jaideep" aria-hidden="true">
+    <div class="chat-head">
+      <div class="chat-id"><span class="chat-avatar">JS</span><div class="chat-meta"><strong>Jaideep's AI</strong><span class="chat-status"><span class="status-dot"></span> Ask me anything about Jaideep</span></div></div>
+      <button class="chat-close" id="chatClose" aria-label="Close chat">✕</button>
+    </div>
+    <div class="chat-log" id="chatLog"></div>
+    <div class="chat-suggest" id="chatSuggest"></div>
+    <form class="chat-input" id="chatForm" autocomplete="off">
+      <input id="chatText" type="text" placeholder="Ask me anything about Jaideep…" aria-label="Your question" />
+      <button type="submit" aria-label="Send message"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M3.4 20.4 21 12 3.4 3.6 3.39 10l12 2-12 2z"/></svg></button>
+    </form>
+  </div>
+
+  <script>window.JAIDEEP_BOT_ENDPOINT = 'https://bot.jaideepsingh.dev';</script>
+  <script src="../script.js"></script>
+</body>
+</html>

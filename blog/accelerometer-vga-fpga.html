@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Driving a VGA display from an accelerometer — entirely in hardware — Jaideep Singh</title>
+  <meta name="description" content="Jaideep Singh on building a real-time accelerometer-to-VGA pipeline on an FPGA with no CPU — a custom SPI master, three clock domains, and careful clock-domain crossing." />
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
+  <link rel="canonical" href="https://jaideepsingh.dev/blog/accelerometer-vga-fpga.html" />
+  <meta property="og:type" content="article" />
+  <meta property="og:site_name" content="Jaideep Singh" />
+  <meta property="og:title" content="Driving a VGA display from an accelerometer — entirely in hardware" />
+  <meta property="og:description" content="A real-time accelerometer-to-VGA pipeline on an FPGA, no CPU — just RTL." />
+  <meta property="og:url" content="https://jaideepsingh.dev/blog/accelerometer-vga-fpga.html" />
+  <meta property="og:image" content="https://jaideepsingh.dev/assets/og-image.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../styles.css" />
+  <link rel="stylesheet" href="../blog.css" />
+  <script>document.documentElement.classList.add('js');</script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "Driving a VGA display from an accelerometer — entirely in hardware",
+    "description": "A real-time accelerometer-to-VGA pipeline on an FPGA with no CPU — custom SPI master, three clock domains, careful CDC.",
+    "datePublished": "2026-05-25",
+    "author": { "@type": "Person", "name": "Jaideep Singh", "url": "https://jaideepsingh.dev" },
+    "publisher": { "@type": "Person", "name": "Jaideep Singh" },
+    "mainEntityOfPage": "https://jaideepsingh.dev/blog/accelerometer-vga-fpga.html",
+    "image": "https://jaideepsingh.dev/assets/og-image.png",
+    "keywords": "FPGA, SystemVerilog, VGA, SPI, clock domain crossing, Intel MAX10, DE10-Lite, hardware, Jaideep Singh"
+  }
+  </script>
+</head>
+<body>
+  <div class="scroll-progress" id="scrollProgress" aria-hidden="true"></div>
+  <header class="nav scrolled" id="nav">
+    <div class="nav-inner">
+      <a href="../index.html" class="nav-logo" aria-label="Home"><span class="logo-mark">JS</span><span class="logo-text">Jaideep Singh</span></a>
+      <nav class="nav-links" aria-label="Primary">
+        <a href="../blog.html">← Writing</a>
+        <a href="../index.html#projects">Projects</a>
+        <a href="../index.html#contact">Contact</a>
+      </nav>
+      <div class="nav-actions">
+        <button class="btn btn-soft nav-ask" id="navAsk">✦ Ask my AI</button>
+        <a href="../index.html#contact" class="btn btn-primary nav-contact">Get in touch</a>
+      </div>
+      <button class="nav-toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false"><span></span><span></span><span></span></button>
+    </div>
+    <div class="nav-mobile" id="navMobile">
+      <a href="../blog.html">← Writing</a>
+      <a href="../index.html#projects">Projects</a>
+      <a href="../index.html#contact">Contact</a>
+    </div>
+  </header>
+
+  <main id="top">
+    <article class="article">
+      <a href="../blog.html" class="article-back">← All writing</a>
+      <span class="article-cat">Hardware / FPGA</span>
+      <h1>Driving a VGA display from an accelerometer — entirely in hardware</h1>
+      <div class="byline">
+        <span class="av">JS</span>
+        <div><b>Jaideep Singh</b><span>May 25, 2026 · 5 min read</span></div>
+      </div>
+      <div class="article-body">
+        <p>Most "sensor to screen" demos hide a microcontroller doing the work. I wanted to do it the hard way: bridge an <strong>ADXL345 accelerometer</strong> to a <strong>640×480 @ 60 Hz VGA display</strong> on an Intel MAX10 FPGA with <strong>no soft-core processor</strong> — just register-transfer logic. Tilt the board and the on-screen graphics and colors respond live.</p>
+
+        <h2>No CPU, just RTL</h2>
+        <p>The whole system is SystemVerilog: an 11-module design across four subsystems with 58 top-level port signals. Without a CPU there's no firmware to lean on — every behavior is an explicit state machine running in parallel hardware. It forces a different, sharper way of thinking about a problem.</p>
+
+        <h2>Talking to the sensor</h2>
+        <p>I wrote a <strong>custom SPI master controller and FSM</strong> to configure the ADXL345 and continuously stream X-axis tilt data. No library, no abstraction layer — just the protocol, timed correctly in hardware.</p>
+
+        <h2>Three clocks, one system</h2>
+        <p>The trickiest part: the system runs on <strong>three clock domains</strong> — 50 MHz logic, 2 MHz SPI, and 25 MHz VGA — generated by two PLLs. Moving data between clocks naively causes metastability and corruption, so I handled <strong>clock-domain crossing</strong> deliberately. CDC is exactly where subtle hardware bugs live.</p>
+
+        <div class="pull">In hardware, the bug isn't usually your logic — it's the boundary between two clocks.</div>
+
+        <h2>Closing the loop</h2>
+        <p>Finally, a feedback loop: extreme tilt (shown on a 10-bit LED array) triggers dynamic RGB color changes on the VGA output, with a parallel 7-segment readout. Input to pixels, entirely in silicon.</p>
+
+        <div class="metric-row">
+          <div><b>11</b><span>HW modules</span></div>
+          <div><b>3</b><span>clock domains</span></div>
+          <div><b>640×480</b><span>@ 60 Hz</span></div>
+          <div><b>0</b><span>soft-core CPUs</span></div>
+        </div>
+
+        <h2>What I took away</h2>
+        <ul>
+          <li><strong>Clock-domain crossing deserves real respect</strong> — design for it, don't discover it.</li>
+          <li><strong>No-CPU forces parallel thinking</strong> — everything is a concurrent state machine.</li>
+          <li><strong>Timing is a first-class constraint,</strong> not an afterthought.</li>
+        </ul>
+        <p>Being comfortable down at the hardware level changes how I reason about software too — about latency, concurrency, and what's really happening under the abstraction.</p>
+      </div>
+      <div class="article-foot">
+        <a class="btn btn-primary" href="https://github.com/JaideepSingh-code/VGA-Graphics-Controller-FPGA" target="_blank" rel="noopener">View the code on GitHub ↗</a>
+        <a class="btn btn-outline" href="../project.html?p=vga-controller">See the full case study →</a>
+      </div>
+    </article>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <span>© <span id="year">2026</span> Jaideep Singh</span>
+      <span class="footer-built">Built &amp; designed with care</span>
+    </div>
+  </footer>
+
+  <button class="chat-fab" id="chatFab" aria-label="Ask my AI assistant"><span class="chat-fab-spark">✦</span><span class="chat-fab-text">Ask my AI</span></button>
+  <div class="chat-panel" id="chatPanel" role="dialog" aria-label="AI assistant about Jaideep" aria-hidden="true">
+    <div class="chat-head">
+      <div class="chat-id"><span class="chat-avatar">JS</span><div class="chat-meta"><strong>Jaideep's AI</strong><span class="chat-status"><span class="status-dot"></span> Ask me anything about Jaideep</span></div></div>
+      <button class="chat-close" id="chatClose" aria-label="Close chat">✕</button>
+    </div>
+    <div class="chat-log" id="chatLog"></div>
+    <div class="chat-suggest" id="chatSuggest"></div>
+    <form class="chat-input" id="chatForm" autocomplete="off">
+      <input id="chatText" type="text" placeholder="Ask me anything about Jaideep…" aria-label="Your question" />
+      <button type="submit" aria-label="Send message"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M3.4 20.4 21 12 3.4 3.6 3.39 10l12 2-12 2z"/></svg></button>
+    </form>
+  </div>
+
+  <script>window.JAIDEEP_BOT_ENDPOINT = 'https://bot.jaideepsingh.dev';</script>
+  <script src="../script.js"></script>
+</body>
+</html>
