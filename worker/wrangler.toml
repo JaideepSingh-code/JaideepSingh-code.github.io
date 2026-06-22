@@ -2,6 +2,12 @@ name = "jaideep-portfolio-bot"
 main = "bot-worker.js"
 compatibility_date = "2024-11-01"
 
+# Serve the worker on a branded custom domain (zone already on this Cloudflare
+# account). Wrangler auto-provisions the DNS record + TLS cert.
+[[routes]]
+pattern = "bot.jaideepsingh.dev"
+custom_domain = true
+
 # Deploy:
 #   cd worker
 #   npm i -g wrangler

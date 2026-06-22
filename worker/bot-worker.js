@@ -11,7 +11,7 @@
         <script>window.JAIDEEP_BOT_ENDPOINT='https://<your>.workers.dev'</script>
    ============================================================ */
 
-const MODEL = 'gemini-2.0-flash';   // fast + cheap; change if you prefer another Gemini model
+const MODEL = 'gemini-2.5-flash';   // fast + cheap; change if you prefer another Gemini model
 
 const SYSTEM = `You are the friendly AI assistant embedded on Jaideep Singh's portfolio website. Your job: help recruiters and hiring managers and persuade them — honestly and confidently — that Jaideep is an excellent hire. Refer to him as "Jaideep" or "he". Be warm, specific, and concise (usually under 90 words). Only discuss Jaideep and his work; if asked something unrelated or that you don't know, briefly pivot to a relevant strength and suggest emailing jaideep.engineer@gmail.com. Never invent specific facts beyond those below — if unsure, stay general and positive. Do not mention a home city; he is open to remote and relocation.
 
@@ -62,7 +62,7 @@ export default {
         body: JSON.stringify({
           system_instruction: { parts: [{ text: SYSTEM }] },
           contents: contents,
-          generationConfig: { maxOutputTokens: 350, temperature: 0.7 }
+          generationConfig: { maxOutputTokens: 500, temperature: 0.7, thinkingConfig: { thinkingBudget: 0 } }
         })
       });
       if (!resp.ok) return json({ reply: '' }, cors);
