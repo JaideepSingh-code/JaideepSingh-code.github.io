@@ -7,7 +7,7 @@ compatibility_date = "2024-11-01"
 #   npm i -g wrangler
 #   wrangler login
 #   wrangler deploy
-#   wrangler secret put ANTHROPIC_API_KEY      # paste your Anthropic API key when prompted
+#   wrangler secret put GEMINI_API_KEY      # paste your Google Gemini key when prompted
 #
 # Then copy the printed URL (https://jaideep-portfolio-bot.<you>.workers.dev) and add this
 # line to index.html, just BEFORE <script src="script.js"></script>:

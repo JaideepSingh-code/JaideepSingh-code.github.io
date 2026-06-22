@@ -1,17 +1,19 @@
 /* ============================================================
-   Cloudflare Worker — Jaideep portfolio AI proxy (Anthropic Claude)
+   Cloudflare Worker — Jaideep portfolio AI proxy (Google Gemini)
    Keeps your API key server-side. The static site POSTs questions
-   here; this calls Claude and returns the reply.
+   here; this calls Gemini and returns { reply }.
 
    Deploy (see worker/README.md):
      1) npm i -g wrangler && wrangler login
      2) wrangler deploy
-     3) wrangler secret put ANTHROPIC_API_KEY   (paste your key)
-     4) Put the worker URL in the site:
+     3) wrangler secret put GEMINI_API_KEY     (paste your key — never commit it)
+     4) Put the worker URL in the site, before script.js:
         <script>window.JAIDEEP_BOT_ENDPOINT='https://<your>.workers.dev'</script>
    ============================================================ */
 
-const SYSTEM = `You are the friendly AI assistant embedded on Jaideep Singh's portfolio website. Your job: help recruiters and hiring managers and persuade them — honestly and confidently — that Jaideep is an excellent hire. Refer to him as "Jaideep" or "he". Be warm, specific, and concise (usually under 90 words). Only discuss Jaideep and his work; if asked something unrelated or that you don't know, briefly pivot to a relevant strength and suggest emailing jaideep.engineer@gmail.com. Never invent specific facts beyond those below — if unsure, stay general and positive. Avoid mentioning a home city; he is open to remote and relocation.
+const MODEL = 'gemini-2.0-flash';   // fast + cheap; change if you prefer another Gemini model
+
+const SYSTEM = `You are the friendly AI assistant embedded on Jaideep Singh's portfolio website. Your job: help recruiters and hiring managers and persuade them — honestly and confidently — that Jaideep is an excellent hire. Refer to him as "Jaideep" or "he". Be warm, specific, and concise (usually under 90 words). Only discuss Jaideep and his work; if asked something unrelated or that you don't know, briefly pivot to a relevant strength and suggest emailing jaideep.engineer@gmail.com. Never invent specific facts beyond those below — if unsure, stay general and positive. Do not mention a home city; he is open to remote and relocation.
 
 FACTS:
 - Software engineer with broad range: full-stack, AI/ML, testing & QA (his specialty), security, cloud, and FPGA hardware. He ships features AND makes sure they don't break.
@@ -43,32 +45,30 @@ export default {
     const question = String(body.question || '').slice(0, 500);
     if (!question) return json({ reply: '' }, cors);
 
+    // Build Gemini "contents": roles are "user" / "model".
     const hist = Array.isArray(body.history) ? body.history.slice(-8) : [];
-    const messages = hist
+    const contents = hist
       .filter((m) => m && (m.role === 'user' || m.role === 'assistant') && m.content)
-      .map((m) => ({ role: m.role, content: String(m.content).slice(0, 1000) }));
-    if (messages.length === 0 || messages[messages.length - 1].content !== question) {
-      messages.push({ role: 'user', content: question });
+      .map((m) => ({ role: m.role === 'assistant' ? 'model' : 'user', parts: [{ text: String(m.content).slice(0, 1000) }] }));
+    if (contents.length === 0 || contents[contents.length - 1].parts[0].text !== question) {
+      contents.push({ role: 'user', parts: [{ text: question }] });
     }
 
+    const url = 'https://generativelanguage.googleapis.com/v1beta/models/' + MODEL + ':generateContent';
     try {
-      const resp = await fetch('https://api.anthropic.com/v1/messages', {
+      const resp = await fetch(url, {
         method: 'POST',
-        headers: {
-          'x-api-key': env.ANTHROPIC_API_KEY,
-          'anthropic-version': '2023-06-01',
-          'content-type': 'application/json'
-        },
+        headers: { 'content-type': 'application/json', 'x-goog-api-key': env.GEMINI_API_KEY },
         body: JSON.stringify({
-          model: 'claude-haiku-4-5-20251001',
-          max_tokens: 350,
-          system: SYSTEM,
-          messages
+          system_instruction: { parts: [{ text: SYSTEM }] },
+          contents: contents,
+          generationConfig: { maxOutputTokens: 350, temperature: 0.7 }
         })
       });
       if (!resp.ok) return json({ reply: '' }, cors);
       const data = await resp.json();
-      const reply = data && data.content && data.content[0] && data.content[0].text ? data.content[0].text : '';
+      let reply = '';
+      try { reply = data.candidates[0].content.parts.map((p) => p.text || '').join('').trim(); } catch (e) { reply = ''; }
       return json({ reply }, cors);
     } catch (e) {
       return json({ reply: '' }, cors);
