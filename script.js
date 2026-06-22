@@ -47,6 +47,19 @@
     revealEls.forEach(function (el) { el.classList.add('in'); });
   }
 
+  // Reveal anything already in the initial viewport immediately — don't wait on
+  // the observer (which can be throttled when the tab isn't focused). This keeps
+  // above-the-fold hero content reliably visible.
+  function revealInView() {
+    revealEls.forEach(function (el) {
+      if (el.classList.contains('in')) return;
+      var r = el.getBoundingClientRect();
+      if (r.top < (window.innerHeight || 800) * 0.95) el.classList.add('in');
+    });
+  }
+  revealInView();
+  window.addEventListener('load', revealInView);
+
   /* ---- Active nav link via section observer ---- */
   var navLinks = Array.prototype.slice.call(document.querySelectorAll('.nav-links a'));
   var sections = navLinks
@@ -103,6 +116,42 @@
       });
     }, { threshold: 0.5 });
     counters.forEach(function (c) { cObs.observe(c); });
+  }
+
+  /* ---- Scroll progress bar ---- */
+  var progress = document.getElementById('scrollProgress');
+  if (progress) {
+    var updateProgress = function () {
+      var h = document.documentElement;
+      var max = h.scrollHeight - h.clientHeight;
+      var p = max > 0 ? h.scrollTop / max : 0;
+      progress.style.transform = 'scaleX(' + p.toFixed(4) + ')';
+    };
+    window.addEventListener('scroll', updateProgress, { passive: true });
+    window.addEventListener('resize', updateProgress);
+    updateProgress();
+  }
+
+  /* ---- 3D tilt on cards (pointer-fine devices only) ---- */
+  var fineHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+  var reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (fineHover && !reducedMotion) {
+    var tiltCards = document.querySelectorAll('.project-card, .stat-card, .skill-card, .lead-card');
+    tiltCards.forEach(function (card) {
+      card.addEventListener('mousemove', function (e) {
+        var r = card.getBoundingClientRect();
+        var px = (e.clientX - r.left) / r.width - 0.5;
+        var py = (e.clientY - r.top) / r.height - 0.5;
+        card.classList.add('tilting');
+        card.style.transform =
+          'perspective(820px) rotateX(' + (-py * 7).toFixed(2) + 'deg) rotateY(' +
+          (px * 9).toFixed(2) + 'deg) translateY(-6px)';
+      });
+      card.addEventListener('mouseleave', function () {
+        card.classList.remove('tilting');
+        card.style.transform = '';
+      });
+    });
   }
 
   /* ---- Footer year ---- */

@@ -23,8 +23,15 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
 
   <link rel="stylesheet" href="styles.css" />
+
+  <!-- Mark JS as available before first paint, so reveal-on-scroll only
+       hides content when JS can also un-hide it (graceful no-JS fallback). -->
+  <script>document.documentElement.classList.add('js');</script>
 </head>
 <body>
+  <!-- Scroll progress -->
+  <div class="scroll-progress" id="scrollProgress" aria-hidden="true"></div>
+
   <!-- Animated background -->
   <div class="bg-layer" aria-hidden="true">
     <div class="bg-grid"></div>
@@ -67,16 +74,17 @@
   <main id="top">
     <!-- Hero -->
     <section class="hero" id="hero">
+      <canvas id="hero-canvas" aria-hidden="true"></canvas>
       <div class="container hero-inner">
         <p class="hero-eyebrow reveal">
-          <span class="status-dot"></span> Open to new-grad &amp; software engineering roles · 2026
+          <span class="status-dot"></span> Open to new-grad &amp; software engineering roles
         </p>
         <h1 class="hero-title reveal">
           Hi, I'm <span class="grad-text">Jaideep Singh</span>.<br />
           I build reliable, well-tested software.
         </h1>
         <p class="hero-sub reveal">
-          Software Engineer in Toronto, graduating from York University in 2026.
+          Software Engineer in Toronto and a 2026 York University graduate.
           I work across the stack — from <strong>full-stack web apps</strong> and <strong>AI/ML systems</strong>
           to <strong>rigorous testing &amp; QA</strong>, <strong>security</strong>, and <strong>FPGA hardware</strong>.
         </p>
@@ -111,9 +119,9 @@
         <div class="about-grid">
           <div class="about-text reveal">
             <p>
-              I'm a final-year <strong>Software Engineering</strong> student at the Lassonde School of
-              Engineering, York University (Specialized Honours), and a York International Scholarship
-              recipient. I'm currently a <strong>Software Developer at Snz Infotech</strong>, shipping
+              I'm a <strong>Software Engineering graduate</strong> (Specialized Honours) from the Lassonde
+              School of Engineering, York University, and a York International Scholarship recipient.
+              I'm currently a <strong>Software Developer at Snz Infotech</strong>, shipping
               full-stack features, REST APIs, and well-tested code for client projects.
             </p>
             <p>
@@ -135,7 +143,7 @@
             </div>
             <div class="stat-card">
               <span class="stat-num">2026</span>
-              <span class="stat-label">B.Eng — Software</span>
+              <span class="stat-label">B.Eng — Graduate</span>
             </div>
             <div class="stat-card">
               <span class="stat-num" data-count="6">0</span>
@@ -549,5 +557,6 @@
   </footer>
 
   <script src="script.js"></script>
+  <script type="module" src="hero3d.js"></script>
 </body>
 </html>
