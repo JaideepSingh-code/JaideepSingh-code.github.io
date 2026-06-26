@@ -375,10 +375,31 @@
     pickedVoice = vs.filter(function (v) { return /^en[-_]/i.test(v.lang); })[0] || vs[0] || null;
   }
   if (synth) { chooseVoice(); if ('onvoiceschanged' in synth) synth.onvoiceschanged = chooseVoice; }
-  function say(text) {
-    if (!speakOn || !synth) return;
-    var clean = plainText(text); if (!clean) return;
+  var ttsAudio = null;          // currently-playing ElevenLabs <audio>
+  var serverVoiceOff = false;   // true once /tts says it isn't configured → use browser voice
+  function stopSpeaking() {
+    if (synth) { try { synth.cancel(); } catch (e) {} }
+    if (ttsAudio) { try { ttsAudio.pause(); } catch (e) {} ttsAudio = null; }
+  }
+  function browserSay(clean) {
+    if (!synth) return;
     try { synth.cancel(); var u = new SpeechSynthesisUtterance(clean); if (pickedVoice) u.voice = pickedVoice; u.rate = 1.04; u.pitch = 1.0; synth.speak(u); } catch (e) {}
+  }
+  function say(text) {
+    if (!speakOn) return;
+    var clean = plainText(text); if (!clean) return;
+    // Prefer Jaideep's real cloned voice (ElevenLabs via the worker); fall back to the browser voice.
+    if (BOT_ENDPOINT && !serverVoiceOff) {
+      stopSpeaking();
+      fetch(BOT_ENDPOINT.replace(/\/$/, '') + '/tts', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ text: clean })
+      })
+        .then(function (r) { if (!r.ok) { if (r.status === 503) serverVoiceOff = true; throw new Error('tts'); } return r.blob(); })
+        .then(function (b) { if (!speakOn) return; var a = new Audio(URL.createObjectURL(b)); ttsAudio = a; a.onended = function () { try { URL.revokeObjectURL(a.src); } catch (e) {} }; a.play().catch(function () {}); })
+        .catch(function () { if (speakOn) browserSay(clean); });
+      return;
+    }
+    browserSay(clean);
   }
 
   // Treat short affirmatives / "tell me more" as a request to expand,
@@ -392,21 +413,43 @@
 
   function botReply(q) {
     var t = typing();
-    function deliver(voiceText, html) { t.remove(); addBot(html); say(voiceText); }
-    if (BOT_ENDPOINT) {
-      fetch(BOT_ENDPOINT, {
-        method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ question: q, history: history.slice(-10) })
+    function fallback() { if (t) { t.remove(); t = null; } var fb = localRespond(q); addBot(fb); say(plainText(fb)); }
+    if (!BOT_ENDPOINT) { setTimeout(fallback, 420 + Math.random() * 420); return; }
+
+    fetch(BOT_ENDPOINT, {
+      method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'text/event-stream' },
+      body: JSON.stringify({ question: q, history: history.slice(-10), stream: true })
+    })
+      .then(function (r) {
+        if (!r.ok || !r.body || !r.body.getReader) throw new Error('bad');
+        var reader = r.body.getReader();
+        var dec = new TextDecoder();
+        var buf = '', full = '', bubble = null;
+        function ensureBubble() {
+          if (!bubble) { if (t) { t.remove(); t = null; } bubble = document.createElement('div'); bubble.className = 'msg bot'; log.appendChild(bubble); }
+        }
+        function handle(line) {
+          if (!line || line === '[DONE]') return;
+          try { var j = JSON.parse(line); if (j.text) { full += j.text; ensureBubble(); bubble.innerHTML = renderMarkdown(full); scrollLog(); } } catch (e) {}
+        }
+        return reader.read().then(function step(res) {
+          if (res.done) {
+            if (!full.trim()) { fallback(); return; }
+            history.push({ role: 'assistant', content: full });
+            ensureBubble(); bubble.innerHTML = renderMarkdown(full); scrollLog();
+            say(full);
+            return;
+          }
+          buf += dec.decode(res.value, { stream: true });
+          var events = buf.split('\n\n'); buf = events.pop();
+          events.forEach(function (ev) {
+            var line = ev.split('\n').filter(function (l) { return l.indexOf('data:') === 0; }).map(function (l) { return l.slice(5).trim(); }).join('');
+            handle(line);
+          });
+          return reader.read().then(step);
+        });
       })
-        .then(function (r) { if (!r.ok) throw new Error('bad'); return r.json(); })
-        .then(function (d) {
-          if (d && d.reply) { history.push({ role: 'assistant', content: d.reply }); deliver(d.reply, renderMarkdown(d.reply)); }
-          else { var fb = localRespond(q); deliver(plainText(fb), fb); }
-        })
-        .catch(function () { var fb = localRespond(q); deliver(plainText(fb), fb); });
-    } else {
-      setTimeout(function () { var fb = localRespond(q); deliver(plainText(fb), fb); }, 420 + Math.random() * 420);
-    }
+      .catch(function () { fallback(); });
   }
 
   function buildSuggestions() {
@@ -476,7 +519,7 @@
       spk.addEventListener('click', function () {
         speakOn = !speakOn; try { localStorage.setItem('voice', speakOn ? 'on' : 'off'); } catch (e) {}
         spk.textContent = speakOn ? '🔊' : '🔈'; spk.classList.toggle('on', speakOn); spk.setAttribute('aria-pressed', speakOn ? 'true' : 'false');
-        if (!speakOn && synth) synth.cancel();
+        if (!speakOn) stopSpeaking();
       });
     }
 

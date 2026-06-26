@@ -8,6 +8,22 @@ compatibility_date = "2024-11-01"
 pattern = "bot.jaideepsingh.dev"
 custom_domain = true
 
+# Per-IP rate limit (Cloudflare native, free). 20 requests / 60s.
+# period must be 10 or 60. Worker fails open if this binding is absent.
+[[unsafe.bindings]]
+name = "RATE_LIMITER"
+type = "ratelimit"
+namespace_id = "1101"
+simple = { limit = 15, period = 60 }
+
+# --- ElevenLabs voice clone (optional; /tts no-ops until configured) ---
+# 1. Clone your voice at elevenlabs.io, copy the Voice ID into ELEVEN_VOICE_ID below.
+# 2. wrangler secret put ELEVEN_API_KEY    # paste your ElevenLabs API key
+# 3. wrangler deploy
+[vars]
+ELEVEN_VOICE_ID = ""
+ELEVEN_MODEL = "eleven_turbo_v2_5"
+
 # Deploy:
 #   cd worker
 #   npm i -g wrangler

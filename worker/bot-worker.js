@@ -81,6 +81,12 @@ Be the engineer people remember after closing the tab — sharp, generous, funny
 
 (Keep replies conversational length — usually 2-5 sentences — unless the visitor clearly wants depth. You may use light markdown.)`;
 
+const GEN_CONFIG = { maxOutputTokens: 600, temperature: 0.85, topP: 0.95, thinkingConfig: { thinkingBudget: 0 } };
+const SAFETY = [
+  { category: 'HARM_CATEGORY_HARASSMENT', threshold: 'BLOCK_ONLY_HIGH' },
+  { category: 'HARM_CATEGORY_DANGEROUS_CONTENT', threshold: 'BLOCK_ONLY_HIGH' }
+];
+
 export default {
   async fetch(request, env) {
     const cors = {
@@ -91,6 +97,21 @@ export default {
     if (request.method === 'OPTIONS') return new Response(null, { headers: cors });
     if (request.method !== 'POST') return new Response('POST only', { status: 405, headers: cors });
 
+    // --- Rate limit per client (Cloudflare native binding; no-op if unbound) ---
+    // Key on the IPv6 /64 prefix (clients rotate the lower 64 bits) or full IPv4.
+    const ip = request.headers.get('cf-connecting-ip') || 'anon';
+    const rlKey = ip.indexOf(':') >= 0 ? ip.split(':').slice(0, 4).join(':') : ip;
+    if (env.RATE_LIMITER) {
+      try {
+        const { success } = await env.RATE_LIMITER.limit({ key: rlKey });
+        if (!success) return json({ reply: "Whoa — you're quick! Give me a few seconds to catch my breath and try again. 😅" }, cors, 429);
+      } catch (e) { /* binding hiccup — fail open */ }
+    }
+
+    const path = new URL(request.url).pathname;
+    if (path === '/tts') return handleTTS(request, env, cors);
+
+    // --- Chat ---
     let body;
     try { body = await request.json(); } catch (e) { return json({ reply: '' }, cors); }
 
@@ -105,20 +126,21 @@ export default {
       contents.push({ role: 'user', parts: [{ text: question }] });
     }
 
+    const payload = JSON.stringify({
+      system_instruction: { parts: [{ text: SYSTEM }] },
+      contents: contents,
+      generationConfig: GEN_CONFIG,
+      safetySettings: SAFETY
+    });
+
+    if (body.stream) return streamChat(env, payload, cors);
+
     const url = 'https://generativelanguage.googleapis.com/v1beta/models/' + MODEL + ':generateContent';
     try {
       const resp = await fetch(url, {
         method: 'POST',
         headers: { 'content-type': 'application/json', 'x-goog-api-key': env.GEMINI_API_KEY },
-        body: JSON.stringify({
-          system_instruction: { parts: [{ text: SYSTEM }] },
-          contents: contents,
-          generationConfig: { maxOutputTokens: 600, temperature: 0.85, topP: 0.95, thinkingConfig: { thinkingBudget: 0 } },
-          safetySettings: [
-            { category: 'HARM_CATEGORY_HARASSMENT', threshold: 'BLOCK_ONLY_HIGH' },
-            { category: 'HARM_CATEGORY_DANGEROUS_CONTENT', threshold: 'BLOCK_ONLY_HIGH' }
-          ]
-        })
+        body: payload
       });
       if (!resp.ok) return json({ reply: '' }, cors);
       const data = await resp.json();
@@ -130,6 +152,79 @@ export default {
     }
   }
 };
+
+// Proxy Gemini's SSE stream, re-emitting minimal { "text": "..." } events.
+function streamChat(env, payload, cors) {
+  const sseHeaders = { ...cors, 'Content-Type': 'text/event-stream; charset=utf-8', 'Cache-Control': 'no-cache' };
+  const url = 'https://generativelanguage.googleapis.com/v1beta/models/' + MODEL + ':streamGenerateContent?alt=sse';
+  const { readable, writable } = new TransformStream();
+  const enc = new TextEncoder();
+  const writer = writable.getWriter();
+
+  (async () => {
+    try {
+      const upstream = await fetch(url, {
+        method: 'POST',
+        headers: { 'content-type': 'application/json', 'x-goog-api-key': env.GEMINI_API_KEY },
+        body: payload
+      });
+      if (!upstream.ok || !upstream.body) { await writer.write(enc.encode('data: [DONE]\n\n')); await writer.close(); return; }
+      const reader = upstream.body.getReader();
+      const dec = new TextDecoder();
+      let buf = '';
+      const emit = async (line) => {
+        if (line.indexOf('data:') !== 0) return;
+        const payload = line.slice(5).trim();
+        if (!payload || payload === '[DONE]') return;
+        let text = '';
+        try { text = JSON.parse(payload).candidates[0].content.parts.map((p) => p.text || '').join(''); } catch (e) { text = ''; }
+        if (text) await writer.write(enc.encode('data: ' + JSON.stringify({ text }) + '\n\n'));
+      };
+      while (true) {
+        const { value, done } = await reader.read();
+        if (done) break;
+        buf += dec.decode(value, { stream: true });
+        let idx;
+        while ((idx = buf.indexOf('\n')) >= 0) {
+          const line = buf.slice(0, idx).replace(/\r$/, '');
+          buf = buf.slice(idx + 1);
+          await emit(line);
+        }
+      }
+      if (buf) await emit(buf.replace(/\r$/, ''));
+      await writer.write(enc.encode('data: [DONE]\n\n'));
+    } catch (e) {
+      try { await writer.write(enc.encode('data: [DONE]\n\n')); } catch (e2) {}
+    } finally {
+      try { await writer.close(); } catch (e) {}
+    }
+  })();
+
+  return new Response(readable, { headers: sseHeaders });
+}
+
+// ElevenLabs text-to-speech — Jaideep's real cloned voice.
+// Returns 503 (so the client falls back to the browser voice) until
+// ELEVEN_API_KEY + ELEVEN_VOICE_ID are configured.
+async function handleTTS(request, env, cors) {
+  if (!env.ELEVEN_API_KEY || !env.ELEVEN_VOICE_ID) return new Response('tts not configured', { status: 503, headers: cors });
+  let text = '';
+  try { text = String((await request.json()).text || '').slice(0, 800); } catch (e) {}
+  if (!text) return new Response('no text', { status: 400, headers: cors });
+  const model = env.ELEVEN_MODEL || 'eleven_turbo_v2_5';
+  const url = 'https://api.elevenlabs.io/v1/text-to-speech/' + env.ELEVEN_VOICE_ID + '?output_format=mp3_44100_128';
+  try {
+    const resp = await fetch(url, {
+      method: 'POST',
+      headers: { 'xi-api-key': env.ELEVEN_API_KEY, 'content-type': 'application/json', accept: 'audio/mpeg' },
+      body: JSON.stringify({ text, model_id: model, voice_settings: { stability: 0.45, similarity_boost: 0.8, style: 0.0, use_speaker_boost: true } })
+    });
+    if (!resp.ok) return new Response('tts upstream error', { status: 502, headers: cors });
+    return new Response(resp.body, { headers: { ...cors, 'Content-Type': 'audio/mpeg', 'Cache-Control': 'no-store' } });
+  } catch (e) {
+    return new Response('tts failed', { status: 502, headers: cors });
+  }
+}
 
 function json(obj, cors, status = 200) {
   return new Response(JSON.stringify(obj), { status, headers: { 'Content-Type': 'application/json', ...cors } });
