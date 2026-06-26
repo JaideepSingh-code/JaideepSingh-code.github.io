@@ -69,8 +69,8 @@
   var cards = document.querySelectorAll('.project-card');
   filters.forEach(function (btn) {
     btn.addEventListener('click', function () {
-      filters.forEach(function (b) { b.classList.remove('active'); });
-      btn.classList.add('active');
+      filters.forEach(function (b) { b.classList.remove('active'); b.setAttribute('aria-pressed', 'false'); });
+      btn.classList.add('active'); btn.setAttribute('aria-pressed', 'true');
       var f = btn.getAttribute('data-filter');
       cards.forEach(function (card) {
         var cats = card.getAttribute('data-cats') || '';
@@ -154,10 +154,16 @@
       '<svg class="ic-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>';
     var navToggleBtn = document.getElementById('navToggle');
     navInner.insertBefore(btn, navToggleBtn);
+    function syncThemeColor() {
+      var mc = document.querySelector('meta[name="theme-color"]');
+      if (mc) mc.setAttribute('content', document.documentElement.getAttribute('data-theme') === 'dark' ? '#0b0c11' : '#f4f3ee');
+    }
+    syncThemeColor();
     btn.addEventListener('click', function () {
       var next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
       document.documentElement.setAttribute('data-theme', next);
       try { localStorage.setItem('theme', next); } catch (e) {}
+      syncThemeColor();
       window.dispatchEvent(new CustomEvent('themechange', { detail: next }));
     });
   })();
@@ -187,22 +193,27 @@
     if (!form) return;
     var statusEl = document.getElementById('cfStatus');
     var endpoint = (typeof window !== 'undefined' && window.FORMSPREE_ENDPOINT) || '';
+    var elName = document.getElementById('cfName'), elEmail = document.getElementById('cfEmail'), elMsg = document.getElementById('cfMsg');
+    var submitBtn = document.getElementById('cfSubmit');
     function set(msg, cls) { statusEl.textContent = msg; statusEl.className = 'cf-status' + (cls ? ' ' + cls : ''); }
+    function clearInvalid() { [elName, elEmail, elMsg].forEach(function (el) { el.removeAttribute('aria-invalid'); }); }
+    function invalid(el, m) { clearInvalid(); el.setAttribute('aria-invalid', 'true'); set(m, 'err'); el.focus(); }
     form.addEventListener('submit', function (e) {
       e.preventDefault();
-      var name = document.getElementById('cfName').value.trim();
-      var email = document.getElementById('cfEmail').value.trim();
-      var msg = document.getElementById('cfMsg').value.trim();
-      if (!name || !email || !msg) { set('Please fill in all three fields.', 'err'); return; }
-      if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) { set("That email doesn't look right.", 'err'); return; }
+      clearInvalid();
+      var name = elName.value.trim(), email = elEmail.value.trim(), msg = elMsg.value.trim();
+      if (!name) return invalid(elName, 'Please enter your name.');
+      if (!email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) return invalid(elEmail, 'Please enter a valid email address.');
+      if (!msg) return invalid(elMsg, 'Please add a short message.');
       if (endpoint) {
-        set('Sending…', '');
+        submitBtn.disabled = true; submitBtn.textContent = 'Sending…'; set('Sending…', '');
         fetch(endpoint, {
           method: 'POST', headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
           body: JSON.stringify({ name: name, email: email, message: msg })
         })
-          .then(function (r) { if (!r.ok) throw new Error(); form.reset(); set("Thanks, " + name.split(' ')[0] + "! I'll be in touch soon. 🙌", 'ok'); })
-          .catch(function () { set('Something went wrong — please email jaideep.engineer@gmail.com directly.', 'err'); });
+          .then(function (r) { if (!r.ok) throw new Error(); form.reset(); set('Thanks, ' + name.split(' ')[0] + "! I'll be in touch soon. 🙌", 'ok'); })
+          .catch(function () { set('Something went wrong — please email jaideep.engineer@gmail.com directly.', 'err'); })
+          .then(function () { submitBtn.disabled = false; submitBtn.textContent = 'Send message'; });
       } else {
         var subject = encodeURIComponent('Portfolio message from ' + name);
         var body = encodeURIComponent(msg + '\n\n— ' + name + ' (' + email + ')');

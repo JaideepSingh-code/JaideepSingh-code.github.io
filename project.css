@@ -78,7 +78,7 @@
 .slide-3d.panel { background: var(--card); padding: 26px 28px; display: flex; flex-direction: column; }
 .slide-3d.panel h4 { font-family: var(--font-display); font-size: 1.25rem; margin-bottom: 16px; color: var(--ink); }
 .panel-metrics { display: grid; grid-template-columns: 1fr 1fr; gap: 16px 12px; }
-.panel-metrics b { font-family: var(--font-display); font-size: 1.9rem; line-height: 1; background: linear-gradient(120deg, var(--pa), var(--pb)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; display: block; }
+.panel-metrics b { font-family: var(--font-display); font-size: 1.9rem; line-height: 1; background: linear-gradient(120deg, var(--pa), var(--pb)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; display: block; font-variant-numeric: tabular-nums; }
 .panel-metrics span { font-size: .78rem; color: var(--muted); }
 .panel-list { list-style: none; display: flex; flex-direction: column; gap: 10px; overflow: hidden; }
 .panel-list li { position: relative; padding-left: 20px; font-size: .9rem; color: var(--ink-soft); line-height: 1.45; }
@@ -108,7 +108,7 @@
 .proj-card { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 24px; box-shadow: var(--shadow-sm); }
 .proj-card h3 { font-family: var(--font-display); font-size: 1.05rem; margin-bottom: 16px; }
 .proj-metrics { list-style: none; display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-.proj-metrics b { font-family: var(--font-display); font-size: 1.7rem; line-height: 1; background: linear-gradient(120deg, var(--pa), var(--pb)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; display: block; }
+.proj-metrics b { font-family: var(--font-display); font-size: 1.7rem; line-height: 1; background: linear-gradient(120deg, var(--pa), var(--pb)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; display: block; font-variant-numeric: tabular-nums; }
 .proj-metrics span { font-size: .76rem; color: var(--muted); }
 .proj-repo-btn { background: linear-gradient(120deg, var(--pa), var(--pb)); border: 0; justify-content: center; }
 .proj-repo-btn:hover { filter: brightness(1.06); transform: translateY(-2px); }
