@@ -318,11 +318,11 @@
   var started = false;
 
   var SUGGESTIONS = [
-    'Why should we hire him?',
-    "What's his strongest skill?",
-    'Tell me about his AI work',
-    'Is he available?',
-    'How do I contact him?'
+    'How do you approach testing?',
+    'Tell me about SalonAI',
+    'Are you open to new roles?',
+    "What's the nerdiest thing you built?",
+    'Wait, are you actually an AI?'
   ];
 
   function scrollLog() { log.scrollTop = log.scrollHeight; }
@@ -347,7 +347,39 @@
     return t;
   }
   function escapeHtml(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
-  function linkifyEmails(h) { return h.replace(/([a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,})/gi, '<a href="mailto:$1">$1</a>'); }
+  function linkifyEmails(h) { return h.replace(/([a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,})(?![^<]*>)/gi, '<a href="mailto:$1">$1</a>'); }
+  // Lightweight, safe markdown → HTML for LLM replies (escape first, then format).
+  function renderMarkdown(t) {
+    var s = escapeHtml(String(t).trim());
+    s = s.replace(/```([\s\S]*?)```/g, function (m, c) { return '<pre><code>' + c.replace(/^\n+|\n+$/g, '') + '</code></pre>'; });
+    s = s.replace(/`([^`\n]+)`/g, '<code>$1</code>');
+    s = s.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+    s = s.replace(/(^|[^*])\*([^*\n]+)\*(?!\*)/g, '$1<em>$2</em>');
+    s = s.replace(/\[([^\]]+)\]\((https?:\/\/[^)\s]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>');
+    s = linkifyEmails(s);
+    s = s.replace(/^[ \t]*[-*•]\s+/gm, '• ');
+    s = s.replace(/\n/g, '<br>');
+    return s;
+  }
+  function plainText(s) { return String(s).replace(/<[^>]+>/g, '').replace(/[*_`#>]/g, '').replace(/\s+/g, ' ').trim(); }
+
+  /* ---- Voice: speak replies (TTS) + mic input (STT), browser-native ---- */
+  var speakOn = false; try { speakOn = localStorage.getItem('voice') === 'on'; } catch (e) {}
+  var synth = window.speechSynthesis || null;
+  var pickedVoice = null;
+  function chooseVoice() {
+    if (!synth) return;
+    var vs = synth.getVoices() || [];
+    var pref = ['Google US English', 'Samantha', 'Microsoft Aria Online (Natural) - English (United States)', 'Microsoft Guy Online (Natural) - English (United States)', 'Daniel', 'Google UK English Male'];
+    for (var i = 0; i < pref.length; i++) { var m = vs.filter(function (v) { return v.name === pref[i]; })[0]; if (m) { pickedVoice = m; return; } }
+    pickedVoice = vs.filter(function (v) { return /^en[-_]/i.test(v.lang); })[0] || vs[0] || null;
+  }
+  if (synth) { chooseVoice(); if ('onvoiceschanged' in synth) synth.onvoiceschanged = chooseVoice; }
+  function say(text) {
+    if (!speakOn || !synth) return;
+    var clean = plainText(text); if (!clean) return;
+    try { synth.cancel(); var u = new SpeechSynthesisUtterance(clean); if (pickedVoice) u.voice = pickedVoice; u.rate = 1.04; u.pitch = 1.0; synth.speak(u); } catch (e) {}
+  }
 
   // Treat short affirmatives / "tell me more" as a request to expand,
   // instead of bouncing to the fallback.
@@ -360,21 +392,20 @@
 
   function botReply(q) {
     var t = typing();
+    function deliver(voiceText, html) { t.remove(); addBot(html); say(voiceText); }
     if (BOT_ENDPOINT) {
       fetch(BOT_ENDPOINT, {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ question: q, history: history.slice(-8) })
+        body: JSON.stringify({ question: q, history: history.slice(-10) })
       })
         .then(function (r) { if (!r.ok) throw new Error('bad'); return r.json(); })
         .then(function (d) {
-          t.remove();
-          var rep = d && d.reply ? linkifyEmails(escapeHtml(d.reply)).replace(/\n/g, '<br>') : localRespond(q);
-          addBot(rep);
-          if (d && d.reply) history.push({ role: 'assistant', content: d.reply });
+          if (d && d.reply) { history.push({ role: 'assistant', content: d.reply }); deliver(d.reply, renderMarkdown(d.reply)); }
+          else { var fb = localRespond(q); deliver(plainText(fb), fb); }
         })
-        .catch(function () { t.remove(); addBot(localRespond(q)); });
+        .catch(function () { var fb = localRespond(q); deliver(plainText(fb), fb); });
     } else {
-      setTimeout(function () { t.remove(); addBot(localRespond(q)); }, 420 + Math.random() * 420);
+      setTimeout(function () { var fb = localRespond(q); deliver(plainText(fb), fb); }, 420 + Math.random() * 420);
     }
   }
 
@@ -391,7 +422,9 @@
   function start() {
     if (started) return;
     started = true;
-    addBot("Hi! 👋 I'm <strong>Jaideep's AI assistant</strong>. Ask me anything about his skills, experience, or projects — I'm here to help you figure out if he's the right hire (spoiler: he is 😄).");
+    var greeting = "Hey — welcome in. I'm <strong>Jaideep's digital twin</strong>: ask me about my projects, the tech I love, or whatever brought you by. So — what are you working on these days?";
+    addBot(greeting);
+    say(plainText(greeting));
     buildSuggestions();
   }
 
@@ -426,5 +459,41 @@
       var el = document.getElementById(id);
       if (el) el.addEventListener('click', openChat);
     });
+
+    // First-person identity in the header + input
+    var metaStrong = panel.querySelector('.chat-meta strong'); if (metaStrong) metaStrong.textContent = 'Jaideep';
+    var statusEl = panel.querySelector('.chat-status'); if (statusEl) statusEl.innerHTML = '<span class="status-dot"></span> AI twin · ask me anything';
+    input.setAttribute('placeholder', 'Ask me anything — tech, projects, or just hi…');
+
+    // Speaker toggle: read replies aloud (Web Speech TTS)
+    if (synth) {
+      var actions = document.createElement('div'); actions.className = 'chat-head-actions';
+      var spk = document.createElement('button'); spk.type = 'button'; spk.className = 'chat-voice' + (speakOn ? ' on' : '');
+      spk.setAttribute('aria-label', 'Toggle voice'); spk.setAttribute('aria-pressed', speakOn ? 'true' : 'false'); spk.title = 'Read replies aloud';
+      spk.textContent = speakOn ? '🔊' : '🔈';
+      closeBtn.parentNode.insertBefore(actions, closeBtn);
+      actions.appendChild(spk); actions.appendChild(closeBtn);
+      spk.addEventListener('click', function () {
+        speakOn = !speakOn; try { localStorage.setItem('voice', speakOn ? 'on' : 'off'); } catch (e) {}
+        spk.textContent = speakOn ? '🔊' : '🔈'; spk.classList.toggle('on', speakOn); spk.setAttribute('aria-pressed', speakOn ? 'true' : 'false');
+        if (!speakOn && synth) synth.cancel();
+      });
+    }
+
+    // Mic: speak your question (Web Speech STT)
+    var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (SR) {
+      var mic = document.createElement('button'); mic.type = 'button'; mic.className = 'chat-mic';
+      mic.setAttribute('aria-label', 'Speak your question'); mic.title = 'Speak';
+      mic.textContent = '🎤';
+      form.insertBefore(mic, form.firstChild);
+      var rec = new SR(); rec.lang = 'en-US'; rec.interimResults = false; rec.maxAlternatives = 1;
+      var listening = false;
+      mic.addEventListener('click', function () { if (listening) { try { rec.stop(); } catch (e) {} } else { try { rec.start(); } catch (e) {} } });
+      rec.onstart = function () { listening = true; mic.classList.add('listening'); input.setAttribute('placeholder', 'Listening…'); };
+      rec.onend = function () { listening = false; mic.classList.remove('listening'); input.setAttribute('placeholder', 'Ask me anything — tech, projects, or just hi…'); };
+      rec.onerror = function () { listening = false; mic.classList.remove('listening'); };
+      rec.onresult = function (e) { var txt = (e.results && e.results[0] && e.results[0][0]) ? e.results[0][0].transcript : ''; if (txt) send(txt); };
+    }
   }
 })();
