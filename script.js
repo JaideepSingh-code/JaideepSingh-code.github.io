@@ -474,6 +474,11 @@
     started = true;
     var greeting = "Hey — welcome in. I'm <strong>Jaideep's digital twin</strong>: ask me about my projects, the tech I love, or whatever brought you by. So — what are you working on these days?";
     addBot(greeting);
+    var talk = document.createElement('button');
+    talk.type = 'button'; talk.className = 'chat-talk-live';
+    talk.innerHTML = '🎙️ Prefer talking? <strong>Start a live voice call</strong>';
+    talk.addEventListener('click', function () { if (window.JAIDEEP_START_VOICE) window.JAIDEEP_START_VOICE(); });
+    log.appendChild(talk); scrollLog();
     say(plainText(greeting));
     buildSuggestions();
     if (showVoiceHint) showVoiceHint();
@@ -564,4 +569,48 @@
       rec.onresult = function (e) { var txt = (e.results && e.results[0] && e.results[0][0]) ? e.results[0][0].transcript : ''; if (txt) send(txt); };
     }
   }
+
+  /* ---- Live voice agent: ElevenLabs Conversational AI (speaks in Jaideep's real voice) ---- */
+  var CONVAI_AGENT_ID = 'agent_3001kw86km20frcb3k1z9edby73w';
+  var convaiWrap = null, convaiScriptAdded = false;
+  function ensureConvai() {
+    if (!convaiWrap) {
+      convaiWrap = document.createElement('div');
+      convaiWrap.className = 'convai-wrap';
+      var w = document.createElement('elevenlabs-convai');
+      w.setAttribute('agent-id', CONVAI_AGENT_ID);
+      convaiWrap.appendChild(w);
+      document.body.appendChild(convaiWrap);
+    }
+    if (!convaiScriptAdded) {
+      var s = document.createElement('script');
+      s.src = 'https://unpkg.com/@elevenlabs/convai-widget-embed';
+      s.async = true; s.type = 'text/javascript';
+      document.body.appendChild(s);
+      convaiScriptAdded = true;
+    }
+    return convaiWrap.querySelector('elevenlabs-convai');
+  }
+  function startVoiceCall() {
+    var el = ensureConvai();
+    convaiWrap.classList.add('show');
+    // Don't let the text chat and the live widget fight for the screen
+    if (panel && panel.classList.contains('open')) closeChat();
+    // Auto-start the call once the widget has upgraded; if blocked, its own
+    // "Start a call" button is now visible as a graceful fallback.
+    var tries = 0;
+    var iv = setInterval(function () {
+      tries++;
+      var btn = el && el.shadowRoot && el.shadowRoot.querySelector('button[aria-label="Start a call"]');
+      if (btn) { clearInterval(iv); try { btn.click(); } catch (e) {} }
+      else if (tries > 50) { clearInterval(iv); }
+    }, 120);
+  }
+  // Wire every "talk live" trigger present at load, and pre-warm on first hover
+  Array.prototype.forEach.call(document.querySelectorAll('.js-talk-live'), function (b) {
+    b.addEventListener('click', startVoiceCall);
+    b.addEventListener('mouseenter', ensureConvai, { once: true });
+  });
+  // Expose for triggers injected later (e.g. inside the chat panel)
+  window.JAIDEEP_START_VOICE = startVoiceCall;
 })();
