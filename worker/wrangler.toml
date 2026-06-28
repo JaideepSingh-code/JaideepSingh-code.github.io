@@ -21,7 +21,7 @@ simple = { limit = 15, period = 60 }
 # 2. wrangler secret put ELEVEN_API_KEY    # paste your ElevenLabs API key
 # 3. wrangler deploy
 [vars]
-ELEVEN_VOICE_ID = ""
+ELEVEN_VOICE_ID = "Tyg7cz0TKbX7U0Z1yeEZ"
 ELEVEN_MODEL = "eleven_turbo_v2_5"
 
 # Deploy:
