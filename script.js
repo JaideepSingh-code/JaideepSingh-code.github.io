@@ -506,7 +506,10 @@
     fab.classList.remove('hidden');
   }
 
-  if (fab && panel) {
+  // Custom text chat is retired in favour of the unified ElevenLabs widget
+  // (text + live voice) wired up below. Flip to true to bring it back.
+  var ENABLE_TEXT_CHAT = false;
+  if (ENABLE_TEXT_CHAT && fab && panel) {
     fab.addEventListener('click', openChat);
     closeBtn.addEventListener('click', closeChat);
     form.addEventListener('submit', function (e) { e.preventDefault(); send(input.value); });
@@ -570,7 +573,7 @@
     }
   }
 
-  /* ---- Live voice agent: ElevenLabs Conversational AI (speaks in Jaideep's real voice) ---- */
+  /* ---- The single chatbot: ElevenLabs Conversational AI (text + live voice, Jaideep's real voice) ---- */
   var CONVAI_AGENT_ID = 'agent_3001kw86km20frcb3k1z9edby73w';
   var convaiWrap = null, convaiScriptAdded = false;
   function ensureConvai() {
@@ -591,26 +594,31 @@
     }
     return convaiWrap.querySelector('elevenlabs-convai');
   }
-  function startVoiceCall() {
+  // Click a control inside the widget's shadow DOM once it has rendered.
+  function convaiClick(aria) {
     var el = ensureConvai();
-    convaiWrap.classList.add('show');
-    // Don't let the text chat and the live widget fight for the screen
-    if (panel && panel.classList.contains('open')) closeChat();
-    // Auto-start the call once the widget has upgraded; if blocked, its own
-    // "Start a call" button is now visible as a graceful fallback.
     var tries = 0;
     var iv = setInterval(function () {
       tries++;
-      var btn = el && el.shadowRoot && el.shadowRoot.querySelector('button[aria-label="Start a call"]');
-      if (btn) { clearInterval(iv); try { btn.click(); } catch (e) {} }
-      else if (tries > 50) { clearInterval(iv); }
+      var b = el && el.shadowRoot && el.shadowRoot.querySelector('button[aria-label="' + aria + '"]');
+      if (b) { clearInterval(iv); try { b.click(); } catch (e) {} }
+      else if (tries > 60) { clearInterval(iv); }
     }, 120);
   }
-  // Wire every "talk live" trigger present at load, and pre-warm on first hover
+  function startVoiceCall() { convaiClick('Start a call'); }
+  function openConvaiChat() { convaiClick('Message'); }
+
+  // Render the one chatbot on every page.
+  ensureConvai();
+
+  // Existing CTAs open the same widget: "Ask" buttons → text, "Talk live" → a voice call.
+  ['navAsk', 'heroAsk', 'contactAsk'].forEach(function (id) {
+    var el = document.getElementById(id);
+    if (el) el.addEventListener('click', function (e) { e.preventDefault(); openConvaiChat(); });
+  });
   Array.prototype.forEach.call(document.querySelectorAll('.js-talk-live'), function (b) {
     b.addEventListener('click', startVoiceCall);
-    b.addEventListener('mouseenter', ensureConvai, { once: true });
   });
-  // Expose for triggers injected later (e.g. inside the chat panel)
   window.JAIDEEP_START_VOICE = startVoiceCall;
+  window.JAIDEEP_OPEN_CHAT = openConvaiChat;
 })();
