@@ -339,6 +339,13 @@
     d.innerHTML = html;
     log.appendChild(d); scrollLog();
   }
+  function addNote(text) {
+    var d = document.createElement('div');
+    d.className = 'msg-note';
+    d.textContent = text;
+    log.appendChild(d); scrollLog();
+  }
+  var showVoiceHint = null; // assigned when the speaker toggle is built
   function typing() {
     var t = document.createElement('div');
     t.className = 'typing';
@@ -469,6 +476,7 @@
     addBot(greeting);
     say(plainText(greeting));
     buildSuggestions();
+    if (showVoiceHint) showVoiceHint();
   }
 
   function send(q) {
@@ -508,17 +516,34 @@
     var statusEl = panel.querySelector('.chat-status'); if (statusEl) statusEl.innerHTML = '<span class="status-dot"></span> AI twin · ask me anything';
     input.setAttribute('placeholder', 'Ask me anything — tech, projects, or just hi…');
 
-    // Speaker toggle: read replies aloud (Web Speech TTS)
-    if (synth) {
+    // Speaker toggle: read replies aloud — in Jaideep's real (cloned) voice when available
+    if (synth || BOT_ENDPOINT) {
       var actions = document.createElement('div'); actions.className = 'chat-head-actions';
       var spk = document.createElement('button'); spk.type = 'button'; spk.className = 'chat-voice' + (speakOn ? ' on' : '');
-      spk.setAttribute('aria-label', 'Toggle voice'); spk.setAttribute('aria-pressed', speakOn ? 'true' : 'false'); spk.title = 'Read replies aloud';
+      spk.setAttribute('aria-label', 'Hear replies in my real voice'); spk.setAttribute('aria-pressed', speakOn ? 'true' : 'false'); spk.title = '🎙️ My real voice — read replies aloud';
       spk.textContent = speakOn ? '🔊' : '🔈';
       closeBtn.parentNode.insertBefore(actions, closeBtn);
       actions.appendChild(spk); actions.appendChild(closeBtn);
+
+      // One-time nudge so visitors realise the voice is genuinely Jaideep's
+      var hint = document.createElement('div'); hint.className = 'voice-hint';
+      hint.innerHTML = '🎙️ Psst — hear my replies in <b>my real voice</b>.';
+      actions.appendChild(hint);
+      var hintTimer = null;
+      function dismissHint() { hint.classList.remove('show'); if (hintTimer) { clearTimeout(hintTimer); hintTimer = null; } try { localStorage.setItem('voiceHintSeen', '1'); } catch (e) {} }
+      showVoiceHint = function () {
+        var seen = false; try { seen = localStorage.getItem('voiceHintSeen') === '1'; } catch (e) {}
+        if (seen || speakOn) return;
+        setTimeout(function () { hint.classList.add('show'); }, 700);
+        hintTimer = setTimeout(dismissHint, 8000);
+      };
+
+      var voiceNoted = false;
       spk.addEventListener('click', function () {
+        dismissHint();
         speakOn = !speakOn; try { localStorage.setItem('voice', speakOn ? 'on' : 'off'); } catch (e) {}
         spk.textContent = speakOn ? '🔊' : '🔈'; spk.classList.toggle('on', speakOn); spk.setAttribute('aria-pressed', speakOn ? 'true' : 'false');
+        if (speakOn && !voiceNoted) { voiceNoted = true; addNote('🎙️ Voice on — you’re hearing my real voice, cloned with AI.'); say('Hey — you’re now hearing my real voice, cloned with AI. Ask me anything.'); }
         if (!speakOn) stopSpeaking();
       });
     }
